@@ -1,0 +1,18 @@
+[application]
+name = "dictionary"
+default_platform = "web"
+
+[web.app]
+title = "Dictionary"
+
+[web.watcher]
+
+[web.resource]
+style = [
+    "./sidepanel.css",
+    "./pkg/style.css",
+ ]
+ script = [
+    "./sidepanel.js",
+#    "./background.js",
+ ]

@@ -1,0 +1,3 @@
+[build]
+target="wasm32-unknown-unknown"
+#rustflags = [ "--cfg=web_sys_unstable_apis" ]   # https://rustwasm.github.io/docs/wasm-bindgen/web-sys/unstable-apis.html

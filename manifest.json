@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Dictionary bookmarks",
+  "version": "1.0",
+  "description": "Private bookmarks for some good dictionaries",
+  "minimum_chrome_version": "109",
+  "author": "olegnet@gmail.com",
+  "offline_enabled": true,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Click to open panel"
+  },
+  "permissions": [
+    "sidePanel",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "storage",
+    "unlimitedStorage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "*://oxfordlearnersdictionaries.com/*",
+    "*://www.oxfordlearnersdictionaries.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "web_accessible_resources": [{
+    "resources": ["pkg/dictionary_bg.wasm", "pkg/dictionary.js", "sidepanel.js"],
+    "matches": ["*://oxfordlearnersdictionaries.com/*", "*://www.oxfordlearnersdictionaries.com/*"]
+  }],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://oxfordlearnersdictionaries.com/*", "*://www.oxfordlearnersdictionaries.com/*"],
+      "js": ["content-script.js"]
+    }
+  ]
+}

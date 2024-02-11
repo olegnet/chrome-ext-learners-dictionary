@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2024 Oleg Okhotnikov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use wasm_bindgen_test::wasm_bindgen_test;
+
+    use crate::storage::Storage;
+    use crate::model::Word;
+    use crate::model::WordKey;
+    use crate::tests::test_init;
+
+    #[wasm_bindgen_test(async)]
+    async fn add_word_test() {
+        test_init("add_word_test");
+        let storage = Storage::open().await.unwrap();
+
+        let mut data: HashMap<WordKey, Word> = HashMap::with_capacity(10);
+
+        for i in 0..10 {
+            let word = format!("word-{}", i);
+            let word_class = format!("word-class-{}", i);
+            let url = format!("url-{}", i);
+            let note = format!("note-{}", i);
+            let folder = format!("folder-{}", i);
+            let _id = storage
+                .add_word(&Word::new(&folder, &word, &word_class, &url, &note))
+                .await
+                .unwrap();
+            // debug!("add_word: {:?}", &id);
+
+            let word_key = (folder.clone(), word.clone());
+            let word = Word {
+                folder,
+                word,
+                word_class,
+                url,
+                note,
+                datetime: 0,
+            };
+            data.insert(word_key, word);
+        }
+
+        for (word_key, word) in data {
+            let result = storage.get_by_id(&word_key).await.unwrap();
+            // debug!("get_by_id: {:?}", &result);
+            assert_eq!(word_key.0, result.folder);
+            assert_eq!(word_key.1, result.word);
+            assert_eq!(word.word, result.word);
+            assert_eq!(word.word_class, result.word_class);
+            assert_eq!(word.note, result.note);
+            assert_ne!(word.datetime, result.datetime);
+        }
+    }
+}
