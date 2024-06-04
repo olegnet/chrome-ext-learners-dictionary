@@ -44,6 +44,7 @@ struct CurrentTabData {
     url: String,
     word: String,
     word_class: String,
+    phonetics: String,
 }
 
 const default_page_length: u32 = 10; // TODO
@@ -61,7 +62,7 @@ const EXPORT_FILE_TYPE: &str = "application/json";
 static CURRENT_TAB_DATA: GlobalSignal<CurrentTabData> = Signal::global(|| CurrentTabData::default());
 
 #[wasm_bindgen]
-pub fn on_tab_loaded(url: String, word: String, word_class: String, title: String) {
+pub fn on_tab_loaded(url: String, word: String, word_class: String, title: String, phonetics: String) {
     let mut word = word;
     if word.len() == 0 {
         match title.split_once(" - ") {
@@ -73,12 +74,14 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
         }
     }
 
-    debug!("tab is loaded: word={} class={} url={}", word, word_class, url);
+    debug!("tab is loaded: word={} class={} phonetics={} url={}", word, word_class, phonetics, url);
 
     match Runtime::current() {
         None => debug!("Runtime::current() is None"),
         Some(_) => ScopeId::ROOT.in_runtime(|| {
-            CURRENT_TAB_DATA.with_mut(move |v| *v = CurrentTabData { url, word, word_class });
+            CURRENT_TAB_DATA.with_mut(move |v|
+                *v = CurrentTabData { url, word, word_class, phonetics }
+            );
         })
     }
 }

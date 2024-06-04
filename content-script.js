@@ -4,6 +4,7 @@ window.addEventListener("load",
             let word = "";
             let wordClass = "";
             let title = "";
+            let phonetics = "";
             try {
                 if (window.location.href.split("/")[4] === "american_english") {
                     for (let element of window.document.getElementsByClassName("webtop-g")) {
@@ -21,6 +22,10 @@ window.addEventListener("load",
                             break;
                         }
                     }
+                    phonetics = window.document.getElementsByClassName("phonetics")[0]
+                        .getElementsByClassName("phons_br")[0]
+                        .getElementsByClassName("phon")[0]
+                        .textContent;
                 }
             } catch (e) {
                 console.error(e);   // FIXME remove in prod
@@ -35,6 +40,7 @@ window.addEventListener("load",
                 from_content_script_word: word,
                 from_content_script_class: wordClass,
                 from_content_script_title: title,
+                from_content_script_phonetics: phonetics,
             });
         })();
     },

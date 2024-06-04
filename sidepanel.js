@@ -8,7 +8,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             sender.tab.url,
             request.from_content_script_word.trim(),
             request.from_content_script_class.trim(),
-            request.from_content_script_title.trim()
+            request.from_content_script_title.trim(),
+            request.from_content_script_phonetics.trim()
         );
     }
 });

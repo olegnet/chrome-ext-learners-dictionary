@@ -96,7 +96,7 @@ pub fn Navigation() -> Element {
     let mut word_str = use_signal(|| String::new());
     let word_error_str = use_signal(|| String::new());
     let mut word_class_str = use_signal(|| String::new());
-    let note_str = use_signal(|| String::new());
+    let mut note_str = use_signal(|| String::new());
 
     let page_length = use_signal(|| default_page_length);
     let offset = use_signal(|| 0u32);
@@ -113,6 +113,7 @@ pub fn Navigation() -> Element {
 
         word_str.set(current_tab_data().word);
         word_class_str.set(current_tab_data().word_class);
+        note_str.set(current_tab_data().phonetics);
     });
 
     rsx! {
