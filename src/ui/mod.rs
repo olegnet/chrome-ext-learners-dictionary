@@ -36,8 +36,8 @@ mod search_form;
 mod settings;
 mod show_folder;
 mod show_word;
-mod utils;
 mod words;
+mod pager;
 
 #[derive(Default, Clone, PartialEq)]
 struct CurrentTabData {

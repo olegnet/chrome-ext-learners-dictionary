@@ -20,13 +20,12 @@ use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use log::debug;
 
-use crate::model::sort_directions;
 use crate::storage_global::get_storage;
 use crate::ui::add_word_form::AddWordForm;
 use crate::ui::error_message::ErrorMessage;
+use crate::ui::pager::Pager;
 use crate::ui::search_form::SearchForm;
 use crate::ui::show_word::ShowWord;
-use crate::ui::utils::{page_left, page_right};
 
 #[component]
 pub(crate) fn Words(
@@ -36,8 +35,8 @@ pub(crate) fn Words(
     word_error_str: Signal<String>,
     word_class_str: Signal<String>,
     note_str: Signal<String>,
-    page_length: Signal<u32>,
-    offset: Signal<u32>,
+    page_length: Signal<Option<u32>>,
+    offset: Signal<Option<u32>>,
     direction: Signal<String>,
     refresh_words: Signal<u8>,
     show_add_word_form: Signal<u8>,
@@ -49,12 +48,7 @@ pub(crate) fn Words(
     let words = use_resource(move || async move {
         let _ = refresh_words();
         get_storage()
-            .get_words(
-                selected_folder_str(),
-                Some(page_length()),
-                Some(offset()),
-                direction(),
-            )
+            .get_words(selected_folder_str(), page_length(), offset(), direction())
             .await
     });
 
@@ -86,14 +80,6 @@ pub(crate) fn Words(
         ),
     };
 
-    let sort_directions_rendered = sort_directions.iter().map(|(dir, _)| {
-        rsx! {
-            option { value: "{dir}",
-                "{dir}"
-            }
-        }
-    });
-
     rsx! {
         if show_add_word_form() != 0u8 {
             SearchForm {
@@ -124,37 +110,11 @@ pub(crate) fn Words(
             div { class: class!(hidden),
                 "{refresh_words}"
             }
-            div {
-                form { action: "",
-                    onsubmit: move |event| event.stop_propagation(),
-                    select { name: "order",
-                        id: "order",
-                        onchange: move |event| direction.set(event.value()),
-                        {sort_directions_rendered}
-                    }
-                    // FIXME A <label> isn't associated with a form field.
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: "<<",
-                        a { href: "#",
-                            onclick: move |_| page_left(page_length, offset),
-                            "<<"
-                        }
-                    }
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: ">>",
-                        a { href: "#",
-                            onclick: move |_| page_right(count, page_length, offset),
-                            ">>"
-                        }
-                    }
-                    label { class: class!(text_red_500),
-                        margin_left: "10px",
-                        title: "count",
-                        "{count}"
-                    }
-                }
+            Pager {
+                page_length: page_length,
+                offset: offset,
+                direction: direction,
+                count: count,
             }
             div {
                 {words_to_show}

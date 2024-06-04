@@ -16,16 +16,15 @@
 
 #![allow(non_snake_case)]
 
-use crate::model::sort_directions;
-use crate::storage_global::get_storage;
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use log::debug;
 
+use crate::storage_global::get_storage;
 use crate::ui::add_folder_form::AddFolderForm;
 use crate::ui::error_message::ErrorMessage;
+use crate::ui::pager::Pager;
 use crate::ui::show_folder::ShowFolder;
-use crate::ui::utils::{page_left, page_right};
 
 #[component]
 pub(crate) fn Folders(
@@ -33,8 +32,8 @@ pub(crate) fn Folders(
     folder_note_str: Signal<String>,
     folder_error_str: Signal<String>,
     selected_folder_str: Signal<String>,
-    page_length: Signal<u32>,
-    offset: Signal<u32>,
+    page_length: Signal<Option<u32>>,
+    offset: Signal<Option<u32>>,
     direction: Signal<String>,
     refresh_folders: Signal<u8>,
     show_add_folder_form: Signal<u8>,
@@ -44,7 +43,7 @@ pub(crate) fn Folders(
     let folders = use_resource(move || async move {
         let _ = refresh_folders();
         get_storage()
-            .get_folders(Some(page_length()), Some(offset()), direction())
+            .get_folders(page_length(), offset(), direction())
             .await
     });
 
@@ -77,14 +76,6 @@ pub(crate) fn Folders(
         ),
     };
 
-    let sort_directions_rendered = sort_directions.iter().map(|(dir, _)| {
-        rsx! {
-            option { value: "{dir}",
-                "{dir}"
-            }
-        }
-    });
-
     rsx! {
         if show_add_folder_form() != 0u8 {
             AddFolderForm {
@@ -99,40 +90,14 @@ pub(crate) fn Folders(
             div { class: class!(hidden),
                 "{refresh_folders}"
             }
+            Pager {
+                page_length: page_length,
+                offset: offset,
+                direction: direction,
+                count: count,
+            }
             div {
-                form { action: "",
-                    onsubmit: move |event| event.stop_propagation(),
-                    select { name: "order",
-                        id: "order",
-                        onchange: move |event| direction.set(event.value()),
-                        {sort_directions_rendered}
-                    }
-                    // FIXME A <label> isn't associated with a form field.
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: "<<",
-                        a { href: "#",
-                            onclick: move |_| page_left(page_length, offset),
-                            "<<"
-                        }
-                    }
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: ">>",
-                        a { href: "#",
-                            onclick: move |_| page_right(count, page_length, offset),
-                            ">>"
-                        }
-                    }
-                    label { class: class!(text_red_500),
-                        margin_left: "10px",
-                        title: "count",
-                        "{count}"
-                    }
-                }
-                div {
-                    {folders_to_show}
-                }
+                {folders_to_show}
             }
         }
     }

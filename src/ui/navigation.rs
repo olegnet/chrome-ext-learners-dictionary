@@ -82,8 +82,8 @@ pub fn Navigation() -> Element {
     let folder_note_str = use_signal(|| String::new());
     let folder_error_str = use_signal(|| String::new());
 
-    let folders_page_length = use_signal(|| default_page_length);
-    let folders_offset = use_signal(|| 0u32);
+    let folders_page_length = use_signal(|| Some(default_page_length));
+    let folders_offset = use_signal(|| None::<u32>);
     let folders_direction = use_signal(|| default_sort_direction.to_string());
     let refresh_folders = use_signal(|| 0u8);
 
@@ -98,8 +98,8 @@ pub fn Navigation() -> Element {
     let mut word_class_str = use_signal(|| String::new());
     let mut note_str = use_signal(|| String::new());
 
-    let page_length = use_signal(|| default_page_length);
-    let offset = use_signal(|| 0u32);
+    let page_length = use_signal(|| Some(default_page_length));
+    let offset = use_signal(|| None::<u32>);
     let direction = use_signal(|| default_sort_direction.to_string());
     let refresh_words = use_signal(|| 0u8);
 
