@@ -47,8 +47,6 @@ struct CurrentTabData {
     phonetics: String,
 }
 
-const default_page_length: u32 = 10; // TODO
-
 const msg_folder_name_is_empty: &str = "Folder name is empty";
 const msg_word_is_empty: &str = "Word is empty";
 const msg_select_folder_first: &str = "Please select a folder first";

@@ -44,7 +44,6 @@ pub(crate) fn Pager(
                     {sort_directions_rendered}
                 }
                 if page_length() != None {
-                    // FIXME A <label> isn't associated with a form field.
                     label { class: class!(text_green_500),
                         margin_left: "5px",
                         title: "<<",
@@ -62,7 +61,7 @@ pub(crate) fn Pager(
                         }
                     }
                 }
-                label { class: class!(text_red_500),
+                label {
                     margin_left: "10px",
                     title: "count",
                     "{count}"

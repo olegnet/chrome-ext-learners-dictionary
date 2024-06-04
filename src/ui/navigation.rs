@@ -27,7 +27,7 @@ use dioxus_std::storage::{LocalStorage, use_synced_storage};
 use futures_util::StreamExt;
 
 use crate::model::default_sort_direction;
-use crate::ui::{CURRENT_TAB_DATA, default_page_length, msg_select_folder_first, updateCurrentTabData};
+use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
 use crate::ui::export_data::ExportData;
 use crate::ui::folders::Folders;
 use crate::ui::icons::EmptyIcon;
@@ -82,7 +82,8 @@ pub fn Navigation() -> Element {
     let folder_note_str = use_signal(|| String::new());
     let folder_error_str = use_signal(|| String::new());
 
-    let folders_page_length = use_signal(|| Some(default_page_length));
+    let folders_page_length = use_synced_storage::<LocalStorage, Option<u32>>(
+        "folders_page_length".to_string(), || None::<u32>);
     let folders_offset = use_signal(|| None::<u32>);
     let folders_direction = use_signal(|| default_sort_direction.to_string());
     let refresh_folders = use_signal(|| 0u8);
@@ -98,7 +99,8 @@ pub fn Navigation() -> Element {
     let mut word_class_str = use_signal(|| String::new());
     let mut note_str = use_signal(|| String::new());
 
-    let page_length = use_signal(|| Some(default_page_length));
+    let page_length = use_synced_storage::<LocalStorage, Option<u32>>(
+        "page_length".to_string(), || None::<u32>);
     let offset = use_signal(|| None::<u32>);
     let direction = use_signal(|| default_sort_direction.to_string());
     let refresh_words = use_signal(|| 0u8);
@@ -218,7 +220,10 @@ pub fn Navigation() -> Element {
                 }
                 Navigation::Settings => {
                     rsx! {
-                        Settings {}
+                        Settings {
+                            folders_page_length: folders_page_length,
+                            page_length: page_length,
+                        }
                     }
                 }
                 Navigation::ExportData => {

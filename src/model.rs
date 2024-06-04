@@ -62,8 +62,8 @@ pub struct WordsAndCount {
 pub type WordKey = (String, String);
 
 pub const sort_directions: [(&'static str, Direction); 2] = [
+    ("ascending", Next),
     ("descending", Prev),
-    ("ascending", Next)
 ];
 
 lazy_static! {
