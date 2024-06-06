@@ -38,6 +38,7 @@ mod show_folder;
 mod show_word;
 mod words;
 mod pager;
+mod page_length;
 
 #[derive(Default, Clone, PartialEq)]
 struct CurrentTabData {
