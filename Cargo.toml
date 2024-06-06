@@ -18,7 +18,7 @@ dioxus-tailwindcss = "0.7.0"
 dioxus-daisyui = "0.7.0"
 
 # https://react-icons.github.io/react-icons/
-dioxus-free-icons = { version = "0.8.5", features = [
+dioxus-free-icons = { version = "0.8.6", features = [
     "material-design-icons-action",
     "material-design-icons-editor",
     "material-design-icons-file",
@@ -33,7 +33,7 @@ gloo-utils = { version = "0.2.0", features = ["serde"] }
 chrono = "0.4.38"
 num-traits = { version = "0.2.19", default-features = false }
 rexie = "0.5.0"
-serde = { version = "1.0.202", features = ["derive"] }
+serde = { version = "1.0.203", features = ["derive"] }
 serde-wasm-bindgen = "0.6.5"
 serde_json = "1.0.117"
 thiserror = "1.0.61"
