@@ -38,13 +38,12 @@ mod tests {
             let url = format!("url-{}", i);
             let note = format!("note-{}", i);
             let folder = format!("folder-{}", i);
-            let _id = storage
+            let id = storage
                 .add_word(&Word::new(&folder, &word, &word_class, &url, &note))
                 .await
                 .unwrap();
             // debug!("add_word: {:?}", &id);
 
-            let word_key = (folder.clone(), word.clone());
             let word = Word {
                 folder,
                 word,
@@ -53,14 +52,12 @@ mod tests {
                 note,
                 datetime: 0,
             };
-            data.insert(word_key, word);
+            data.insert(id, word);
         }
 
         for (word_key, word) in data {
             let result = storage.get_by_id(&word_key).await.unwrap();
             // debug!("get_by_id: {:?}", &result);
-            assert_eq!(word_key.0, result.folder);
-            assert_eq!(word_key.1, result.word);
             assert_eq!(word.word, result.word);
             assert_eq!(word.word_class, result.word_class);
             assert_eq!(word.note, result.note);

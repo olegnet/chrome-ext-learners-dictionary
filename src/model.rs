@@ -59,7 +59,7 @@ pub struct WordsAndCount {
     pub count: u32,
 }
 
-pub type WordKey = (String, String);
+pub type WordKey = u32;
 
 pub const sort_directions: [(&'static str, Direction); 2] = [
     ("ascending", Next),

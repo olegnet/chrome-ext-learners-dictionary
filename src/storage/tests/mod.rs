@@ -21,4 +21,3 @@ mod get_folders_test;
 mod get_words_test;
 mod import_data_test;
 mod storage_open_test;
-mod store_index_test;

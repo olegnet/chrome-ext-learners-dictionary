@@ -23,23 +23,17 @@ use crate::storage::storage_error::StorageError;
 
 impl Storage {
     pub(crate) async fn open() -> Result<Storage, StorageError> {
+        // FIXME one default sort order for both "folders" and "words"
         let rexie = Rexie::builder(DATABASE_NAME)
             .version(DATABASE_VERSION)
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_FOLDERS)
                     .key_path("folder")
-                    .add_index(Index::new_array("folder", ["folder", "folder_note"]))
-                    .add_index(Index::new("datetime", "datetime")),
             )
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_WORDS)
-                    .key_path_array(["folder", "word"])
+                    .auto_increment(true)
                     .add_index(Index::new("folder", "folder"))
-                    .add_index(Index::new_array(
-                        "word",
-                        ["folder", "word", "word_class", "note"],
-                    ))
-                    .add_index(Index::new("datetime", "datetime")),
             )
             .build()
             .await?;

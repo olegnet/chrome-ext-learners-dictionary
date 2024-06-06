@@ -17,11 +17,11 @@
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use wasm_bindgen_test::wasm_bindgen_test;
-    use crate::model::WordKey;
 
-    use crate::storage::Storage;
+    use wasm_bindgen_test::wasm_bindgen_test;
+
     use crate::model::Word;
+    use crate::storage::Storage;
     use crate::tests::test_init;
 
     #[wasm_bindgen_test(async)]
@@ -62,7 +62,7 @@ mod tests {
         // debug!("result.len(): {:?}", &result.len());
         assert_eq!(&data.len(), &result.words.len());
 
-        let mut result_map: HashMap<WordKey, Word> = HashMap::with_capacity(length as usize);
+        let mut result_map: HashMap<(String, String), Word> = HashMap::new();
         result.words.iter().for_each(|x| {
             let key = (x.folder.clone(), x.word.clone());
             result_map.insert(key, x.to_owned());

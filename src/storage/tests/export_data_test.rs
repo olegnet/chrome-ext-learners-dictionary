@@ -19,7 +19,7 @@ mod tests {
     use std::collections::HashMap;
     use wasm_bindgen_test::wasm_bindgen_test;
 
-    use crate::model::{Data, Folder, Word, WordKey};
+    use crate::model::{Data, Folder, Word};
     use crate::storage::{IMPORT_EXPORT_DATA_VERSION, Storage};
     use crate::tests::test_init;
 
@@ -79,7 +79,7 @@ mod tests {
             assert_eq!(row, result);
         }
 
-        let mut result_map: HashMap<WordKey, Word> = HashMap::new();
+        let mut result_map: HashMap<(String, String), Word> = HashMap::new();
         data.words.iter().for_each(|x| {
             let key = (x.folder.clone(), x.word.clone());
             result_map.insert(key, x.to_owned());
