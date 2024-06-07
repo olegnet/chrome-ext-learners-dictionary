@@ -19,7 +19,8 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_free_icons::Icon;
-use dioxus_free_icons::icons::fi_icons::FiSearch;
+use dioxus_free_icons::icons::fi_icons::{FiSearch, FiTrash};
+use log::error;
 
 use crate::model::Word;
 use crate::ui::{dictionaryLookup, openUrl};
@@ -32,15 +33,9 @@ pub(crate) fn ShowWord(word: ReadOnlySignal<Word>) -> Element {
     let url = word().url;
 
     rsx! {
-        div { //class: class!(grid),
-            div { class: class!(flex items_baseline),
-                a { class: class!(inline_block underline),
-                    href: "#",
-                    onclick: move |_| { spawn(openUrl(url.clone())); },
-                    "{word_str}"
-                }
-                a { class: class!(inline_block),
-                    margin_left: "10px",
+        div { class: class!(flex items_baseline),
+            div { class: class!(flex_none),
+                a { //class: class!(inline_block),
                     href: "#",
                     onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
                     Icon {
@@ -50,13 +45,33 @@ pub(crate) fn ShowWord(word: ReadOnlySignal<Word>) -> Element {
                         icon: FiSearch,
                     }
                 }
-                span { class: class!(text_xs inline_block),
-                    margin_left: "5px",
+            }
+            div { class: class!(flex_1),
+                margin_left: "10px",
+                a { class: class!(inline_block underline),
+                    href: "#",
+                    onclick: move |_| { spawn(openUrl(url.clone())); },
+                    "{word_str}"
+                }
+                p { class: class!(text_xs),
                     "{word_class}"
                 }
-                span { class: class!(inline_block),
-                    margin_left: "5px",
-                    "{note}"
+            }
+            div { class: class!(flex_1),
+                margin_left: "5px",
+                "{note}"
+            }
+            div { class: class!(flex_none),
+                a { class: class!(inline_block),
+                    margin_right: "5px",
+                    href: "#",
+                    onclick: move |_| { error!("FIXME!");  },         // TODO
+                    Icon {
+                        fill: "black",
+                        height: 15,
+                        width: 15,
+                        icon: FiTrash,
+                    }
                 }
             }
         }
