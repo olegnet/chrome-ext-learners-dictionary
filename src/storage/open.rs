@@ -23,12 +23,11 @@ use crate::storage::storage_error::StorageError;
 
 impl Storage {
     pub(crate) async fn open() -> Result<Storage, StorageError> {
-        // FIXME one default sort order for both "folders" and "words"
         let rexie = Rexie::builder(DATABASE_NAME)
             .version(DATABASE_VERSION)
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_FOLDERS)
-                    .key_path("folder")
+                    .auto_increment(true)
             )
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_WORDS)
