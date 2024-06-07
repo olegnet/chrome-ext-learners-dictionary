@@ -28,11 +28,13 @@ impl Storage {
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_FOLDERS)
                     .auto_increment(true)
+                    .add_index(Index::new("folder", "folder").unique(true)),
             )
             .add_object_store(
                 ObjectStore::new(OBJ_STORE_WORDS)
                     .auto_increment(true)
                     .add_index(Index::new("folder", "folder"))
+                    .add_index(Index::new_array("words", ["folder", "word"]).unique(true)),
             )
             .build()
             .await?;
