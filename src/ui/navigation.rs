@@ -99,10 +99,10 @@ pub fn Navigation() -> Element {
     let mut word_class_str = use_signal(|| String::new());
     let mut note_str = use_signal(|| String::new());
 
-    let page_length = use_synced_storage::<LocalStorage, Option<u32>>(
+    let words_page_length = use_synced_storage::<LocalStorage, Option<u32>>(
         "page_length".to_string(), || None::<u32>);
-    let offset = use_signal(|| None::<u32>);
-    let direction = use_signal(|| default_sort_direction.to_string());
+    let words_page_offset = use_signal(|| None::<u32>);
+    let words_direction = use_signal(|| default_sort_direction.to_string());
     let refresh_words = use_signal(|| 0u8);
 
     let show_add_word_form = use_synced_storage::<LocalStorage, u8>(
@@ -210,9 +210,9 @@ pub fn Navigation() -> Element {
                             word_error_str: word_error_str,
                             word_class_str: word_class_str,
                             note_str: note_str,
-                            page_length: page_length,
-                            offset: offset,
-                            direction: direction,
+                            page_length: words_page_length,
+                            offset: words_page_offset,
+                            direction: words_direction,
                             refresh_words: refresh_words,
                             show_add_word_form: show_add_word_form,
                         }
@@ -222,7 +222,9 @@ pub fn Navigation() -> Element {
                     rsx! {
                         Settings {
                             folders_page_length: folders_page_length,
-                            page_length: page_length,
+                            folders_offset: folders_offset,
+                            words_page_length: words_page_length,
+                            words_offset: words_page_offset,
                         }
                     }
                 }

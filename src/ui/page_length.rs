@@ -31,6 +31,7 @@ pub(crate)
 fn PageLength(
     placeholder_str: &'static str,
     page_length: Signal<Option<u32>>,
+    offset: Signal<Option<u32>>,
 ) -> Element {
     let get_page_length = move || match page_length() {
         None => msg_unlimited_page_length.to_string(),
@@ -54,6 +55,7 @@ fn PageLength(
                             message_str.set(msg_page_length_updated_to_number(&val));
                         }
                     }
+                    offset.set(None);
                     page_length_val.set(get_page_length());
                 },
                 input { class: class!(outline),

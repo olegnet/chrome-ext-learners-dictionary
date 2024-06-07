@@ -28,7 +28,9 @@ use crate::ui::page_length::PageLength;
 #[component]
 pub(crate) fn Settings(
     folders_page_length: Signal<Option<u32>>,
-    page_length: Signal<Option<u32>>,
+    folders_offset: Signal<Option<u32>>,
+    words_page_length: Signal<Option<u32>>,
+    words_offset: Signal<Option<u32>>,
 ) -> Element {
     let navigation = use_coroutine_handle::<Navigation>();
 
@@ -55,7 +57,8 @@ pub(crate) fn Settings(
                     "Folders"
                     PageLength {
                         placeholder_str: "page length for folders",
-                        page_length: folders_page_length
+                        page_length: folders_page_length,
+                        offset: folders_offset,
                     }
                 }
                 div {
@@ -63,7 +66,8 @@ pub(crate) fn Settings(
                     "Words"
                     PageLength {
                         placeholder_str: "page length for words",
-                        page_length: page_length
+                        page_length: words_page_length,
+                        offset: words_offset,
                     }
                 }
             }
