@@ -33,6 +33,7 @@ use crate::ui::folders::Folders;
 use crate::ui::icons::EmptyIcon;
 use crate::ui::import_data::ImportData;
 use crate::ui::settings::Settings;
+use crate::ui::show_copyright::ShowCopyright;
 use crate::ui::words::Words;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -120,6 +121,7 @@ pub fn Navigation() -> Element {
 
     rsx! {
         div { class: class!(text_lg),
+            position: "relative",
             margin_top: "5px",
             form { action: "",
                 onsubmit: move |event| event.stop_propagation(),
@@ -239,6 +241,9 @@ pub fn Navigation() -> Element {
                     }
                 }
             }
+        }
+        if navigation_state() == Navigation::Settings {
+            ShowCopyright {}
         }
     }
 }
