@@ -26,14 +26,17 @@ use crate::model::Word;
 use crate::ui::{dictionaryLookup, openUrl};
 
 #[component]
-pub(crate) fn ShowWord(word: ReadOnlySignal<Word>) -> Element {
+pub(crate) fn ShowWord(
+    word: ReadOnlySignal<Word>,
+    background_color: &'static str,
+) -> Element {
     let word_str = word().word;
     let word_class = word().word_class;
     let note = word().note;
     let url = word().url;
 
     rsx! {
-        div { class: class!(flex items_baseline),
+        div { class: class!(flex items_baseline background_color),
             div { class: class!(flex_none),
                 a { //class: class!(inline_block),
                     href: "#",
