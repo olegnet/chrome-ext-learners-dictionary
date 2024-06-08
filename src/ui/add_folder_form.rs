@@ -35,7 +35,7 @@ pub(crate) fn AddFolderForm(
         to_owned![refresh_folders];
         async move {
             while let Some(folder) = rx.next().await {
-                let _ = get_storage().add_folder(&folder).await;
+                let _ = get_storage().add::<Folder>(&folder).await;
                 refresh_folders.toggle();
             }
         }

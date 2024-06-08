@@ -38,7 +38,7 @@ mod tests {
             let note = format!("note-{}", i);
             let folder = format!("folder-{}", i);
             let id = storage
-                .add_word(&Word::new(&folder, &word, &word_class, &url, &note))
+                .add::<Word>(&Word::new(&folder, &word, &word_class, &url, &note))
                 .await
                 .unwrap();
             // debug!("add_word: {:?}", &id);

@@ -39,7 +39,7 @@ pub(crate) fn AddWordForm(
         to_owned![refresh_words];
         async move {
             while let Some(word) = rx.next().await {
-                let _ = get_storage().add_word(&word).await;
+                let _ = get_storage().add::<Word>(&word).await;
                 refresh_words.toggle();
             }
         }

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-use log::debug;
-
 use crate::model::Data;
 use crate::storage::{
-    HasId, ObjStoreName, Storage, StorageError, IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR,
+    IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR, Storage, StorageError,
 };
 
 impl Storage {
@@ -35,28 +33,5 @@ impl Storage {
         self.import(&data.words).await?;
 
         Ok(data)
-    }
-
-    async fn import<T>(&self, data: &Vec<T>) -> Result<(), StorageError>
-    where
-        T: serde::Serialize + ObjStoreName + HasId<T>,
-    {
-        let tc = self.get_transaction(T::OBJ_STORE_NAME)?;
-        for value in data {
-            let js_value = serde_wasm_bindgen::to_value(value)?;
-            let result = tc.store.add(&js_value, None).await?;
-            debug!("import: result: {:?}", &result);
-
-            let id: u32 = serde_wasm_bindgen::from_value(result.clone())?;
-            debug!("import: id: {:?}", &result);
-
-            let word_with_id = value.set_id(Some(id));
-            let js_word_with_id = serde_wasm_bindgen::to_value(&word_with_id)?;
-
-            let result = tc.store.put(&js_word_with_id, Some(&result)).await?;
-            debug!("import: put: result: {:?}", &result);
-        }
-        tc.transaction.commit().await?;
-        Ok(())
     }
 }

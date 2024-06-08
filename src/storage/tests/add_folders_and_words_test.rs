@@ -32,16 +32,16 @@ mod tests {
         let folder_two_name = "folder-2-5".to_string();
 
         let err = storage
-            .add_folder(&Folder::new(&folder_one_name, &"folder-note-1".to_string()))
+            .add::<Folder>(&Folder::new(&folder_one_name, &"folder-note-1".to_string()))
             .await;
         // debug!("err: {:?}", err);
-        assert_eq!(err, Ok(()));
+        assert!(matches!(err, Ok(_)));
 
         let err = storage
-            .add_folder(&Folder::new(&folder_two_name, &"folder-note-2".to_string()))
+            .add::<Folder>(&Folder::new(&folder_two_name, &"folder-note-2".to_string()))
             .await;
         // debug!("err: {:?}", err);
-        assert_eq!(err, Ok(()));
+        assert!(matches!(err, Ok(_)));
 
         let word_one_name = "word-1-5".to_string();
         let word_two_name = "word-2-5".to_string();
@@ -78,16 +78,16 @@ mod tests {
             &"note-4".to_string(),
         );
 
-        let _word_one_id = storage.add_word(&word_one).await.unwrap();
+        let _word_one_id = storage.add::<Word>(&word_one).await.unwrap();
         // debug!("word_one: {:?}", &word_one_id);
 
-        let _word_two_id = storage.add_word(&word_two).await.unwrap();
+        let _word_two_id = storage.add::<Word>(&word_two).await.unwrap();
         // debug!("word_two: {:?}", &word_two_id);
 
-        let _word_three_id = storage.add_word(&word_three).await.unwrap();
+        let _word_three_id = storage.add::<Word>(&word_three).await.unwrap();
         // debug!("word_three: {:?}", &word_three_id);
 
-        let _word_four_id = storage.add_word(&word_four).await.unwrap();
+        let _word_four_id = storage.add::<Word>(&word_four).await.unwrap();
         // debug!("word_four: {:?}", &word_four_id);
 
         let result = storage

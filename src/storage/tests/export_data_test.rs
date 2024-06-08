@@ -37,7 +37,7 @@ mod tests {
             let folder_name = format!("folder-{}-3", i);
             let folder_note = format!("note-{}", i);
             let folder = Folder::new(&folder_name, &folder_note);
-            storage.add_folder(&folder).await.unwrap();
+            storage.add::<Folder>(&folder).await.unwrap();
             folders.push(folder);
 
             for j in 0..words_len {
@@ -46,7 +46,7 @@ mod tests {
                 let url = format!("url-{}", j);
                 let note = format!("note-{}", j);
                 let id = storage
-                    .add_word(&Word::new(&folder_name, &word, &word_class, &url, &note))
+                    .add::<Word>(&Word::new(&folder_name, &word, &word_class, &url, &note))
                     .await
                     .unwrap();
 

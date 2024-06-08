@@ -40,7 +40,7 @@ mod tests {
             let url = format!("url-{}", i);
             let note = format!("note-{}", i);
             let id = storage
-                .add_word(&Word::new(&folder, &word, &word_class, &url, &note))
+                .add::<Word>(&Word::new(&folder, &word, &word_class, &url, &note))
                 .await
                 .unwrap();
             // debug!("get_words_test: {:?}", &id);

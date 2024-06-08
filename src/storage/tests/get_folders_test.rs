@@ -37,15 +37,15 @@ mod tests {
             let folder = format!("folder-{}-4", i);
             let folder_note = format!("note-{}", i);
             let folder2 = Folder::new(&folder, &folder_note);
-            storage.add_folder(&folder2).await.unwrap();
+            storage.add::<Folder>(&folder2).await.unwrap();
             data.push(folder2);
         }
 
         let err = storage
-            .add_folder(&Folder::new(&"folder-0-4".to_string(), &"note-0".to_string()))
+            .add::<Folder>(&Folder::new(&"folder-0-4".to_string(), &"note-0".to_string()))
             .await;
         // debug!("err: {:?}", err);
-        assert_ne!(err, Ok(()));
+        assert!(matches!(err, Err(_)));
 
         let result = storage.get_folders(None, None, String::new()).await.unwrap();
         // debug!("result.len(): {:?}", &result.folders.len());
@@ -59,7 +59,10 @@ mod tests {
         for row in &data {
             let result = result_map.get(&row.folder).unwrap();
             // debug!("result: {:?}", &result);
-            assert_eq!(row, result);
+            assert_ne!(row.id, result.id);
+            assert_eq!(row.folder, result.folder);
+            assert_eq!(row.folder_note, result.folder_note);
+            assert_eq!(row.datetime, result.datetime);
         }
     }
 }

@@ -18,6 +18,9 @@ use crate::storage::{ObjStoreName, Storage};
 use crate::storage::storage_error::StorageError;
 
 impl Storage {
+
+    // FIXME delete words from folder with the folder
+
     pub(crate) async fn delete_by_id<T>(&self, id: u32) -> Result<(), StorageError>
         where T: ObjStoreName
     {

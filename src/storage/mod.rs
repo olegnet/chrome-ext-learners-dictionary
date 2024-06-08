@@ -21,8 +21,7 @@ use rexie::Rexie;
 use crate::model::{Folder, Word};
 use crate::storage::storage_error::StorageError;
 
-mod add_folder;
-mod add_word;
+mod add;
 mod delete_by_id;
 mod export_data;
 mod get_folders;
@@ -65,7 +64,7 @@ impl ObjStoreName for Word {
     const OBJ_STORE_NAME: &'static str = OBJ_STORE_WORDS;
 }
 
-trait HasId<T> {
+pub(crate) trait HasId<T> {
     fn set_id(&self, id: Option<u32>) -> T;
 }
 
