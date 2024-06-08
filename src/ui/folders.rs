@@ -65,10 +65,11 @@ pub(crate) fn Folders(
         }
         Some(Ok(result)) => (
             rsx! {
-                for folder in &result.folders {
+                for (index, folder) in result.folders.iter().enumerate() {
                     ShowFolder {
                         folder: folder.to_owned(),
                         selected_folder_str: selected_folder_str,
+                        background_color: match index % 2 { 0 => bg_gray_200, _ => "" },
                     }
                 }
             },

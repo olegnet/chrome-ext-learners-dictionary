@@ -67,6 +67,11 @@ pub struct WordKey {
     pub id: u32,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
+pub struct FolderKey {
+    pub folder: String,
+}
+
 pub const sort_directions: [(&'static str, Direction); 2] =
     [("ascending", Next), ("descending", Prev)];
 

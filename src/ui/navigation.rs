@@ -26,7 +26,7 @@ use dioxus_free_icons::icons::md_navigation_icons::{MdArrowDropDown, MdArrowDrop
 use dioxus_std::storage::{LocalStorage, use_synced_storage};
 use futures_util::StreamExt;
 
-use crate::model::{default_sort_direction, WordKey};
+use crate::model::{default_sort_direction, FolderKey, WordKey};
 use crate::storage_global::get_storage;
 use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
 use crate::ui::export_data::ExportData;
@@ -117,20 +117,36 @@ pub fn Navigation() -> Element {
         "show_add_word_form".to_string(), || 255u8);
 
     let data_protection = use_signal(|| DataProtection::Protected);
+    let data_protection_error = move ||
+        navigation_error_str.set("Data protection is set. Check the settings to disable it".to_string());
 
     let _delete_word = use_coroutine(|mut rx: UnboundedReceiver<WordKey>| {
-        to_owned![refresh_words];
+        to_owned![refresh_words, data_protection_error];
         async move {
             while let Some(word_key) = rx.next().await {
                 match data_protection() {
                     // FIXME Find a better place for the messages
-                    DataProtection::Protected => {
-                        navigation_error_str.set("Data protection is set. Check the settings to disable it".to_string());
-                    }
+                    DataProtection::Protected => data_protection_error(),
                     DataProtection::Unprotected => {
                         let _ = get_storage().delete_word(word_key.id).await;
                         refresh_words.toggle();
                         navigation_error_str.set("Word was deleted".to_string());
+                    }
+                }
+            }
+        }
+    });
+
+    let _delete_folder = use_coroutine(|mut rx: UnboundedReceiver<FolderKey>| {
+        to_owned![refresh_folders, data_protection_error];
+        async move {
+            while let Some(folder_key) = rx.next().await {
+                match data_protection() {
+                    DataProtection::Protected => data_protection_error(),
+                    DataProtection::Unprotected => {
+                        // FIXME let _ = get_storage().delete_folder(folder_key.folder).await;
+                        refresh_folders.toggle();
+                        navigation_error_str.set(format!("Folder {} was deleted", folder_key.folder));
                     }
                 }
             }

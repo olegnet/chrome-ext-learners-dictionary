@@ -18,23 +18,28 @@
 
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fi_icons::FiTrash;
 
-use crate::model::Folder;
+use crate::model::{Folder, FolderKey};
 use crate::ui::navigation::Navigation;
 
 #[component]
 pub(crate) fn ShowFolder(
     folder: ReadOnlySignal<Folder>,
     selected_folder_str: Signal<String>,
+    background_color: &'static str,
 ) -> Element {
     let navigation = use_coroutine_handle::<Navigation>();
+    let folder_key = use_coroutine_handle::<FolderKey>();
 
     let folder_str = folder().folder;
     let folder_note_str = folder().folder_note;
 
     rsx! {
-        div { class: class!(flex items_baseline),
-            span { class: class!(inline_block),
+        div { class: class!(flex items_baseline background_color),
+            div { class: class!(flex_none),
+                margin_left: "5px",
                 a { class: class!(underline),
                     href: "#",
                     onclick: move |_| {
@@ -44,9 +49,22 @@ pub(crate) fn ShowFolder(
                     "{folder_str}"
                 }
             }
-            span { class: class!(inline_block text_sm),
+            div { class: class!(flex_1 text_xs),
                 margin_left: "5px",
                 "{folder_note_str}"
+            }
+            div { class: class!(flex_none),
+                a { class: class!(inline_block),
+                    margin_right: "5px",
+                    href: "#",
+                    onclick: move |_| folder_key.send(FolderKey{ folder: folder().folder }),
+                    Icon {
+                        fill: "black",
+                        height: 15,
+                        width: 15,
+                        icon: FiTrash,
+                    }
+                }
             }
         }
     }
