@@ -18,9 +18,7 @@
 
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
-use futures_util::StreamExt;
 use log::debug;
-use crate::model::WordKey;
 
 use crate::storage_global::get_storage;
 use crate::ui::add_word_form::AddWordForm;
@@ -48,16 +46,6 @@ pub(crate) fn Words(
     let search_str = use_signal(|| String::new());
     let selected_word = use_signal(|| None::<u32>);
     // let selected_word = use_signal(|| Some(10u32));
-
-    let _delete_word = use_coroutine(|mut rx: UnboundedReceiver<WordKey>| {
-        to_owned![refresh_words];
-        async move {
-            while let Some(word_key) = rx.next().await {
-                let _ = get_storage().delete_word(word_key.id).await;
-                refresh_words.toggle();
-            }
-        }
-    });
 
     let words = use_resource(move || async move {
         let _ = refresh_words();

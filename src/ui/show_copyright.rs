@@ -24,7 +24,7 @@ use dioxus_daisyui::prelude::*;
 #[component]
 pub fn ShowCopyright() -> Element {
     rsx! {
-        div { class: class!(text_lg),
+        div { class: class!(text_base),
             position: "absolute",
             bottom: "0",
             margin_bottom: "15px",

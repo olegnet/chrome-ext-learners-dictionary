@@ -19,7 +19,7 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 
-use crate::ui::navigation::Navigation;
+use crate::ui::navigation::{DataProtection, Navigation};
 use crate::ui::page_length::PageLength;
 
 // TODO Fonts sizes, dark theme
@@ -31,8 +31,14 @@ pub(crate) fn Settings(
     folders_offset: Signal<Option<u32>>,
     words_page_length: Signal<Option<u32>>,
     words_offset: Signal<Option<u32>>,
+    data_protection: Signal<DataProtection>,
 ) -> Element {
     let navigation = use_coroutine_handle::<Navigation>();
+
+    let data_protection_memo = use_memo(move || match data_protection() {
+        DataProtection::Unprotected => "You can delete folders and words",
+        DataProtection::Protected => "Uncheck to be able to delete folders and words",
+    });
 
     rsx! {
         div { class: class!(text_base),
@@ -48,6 +54,7 @@ pub(crate) fn Settings(
                     "Import"
                 }
             }
+
             hr { margin_top: "10px" }
             div {
                 margin_top: "10px",
@@ -71,6 +78,31 @@ pub(crate) fn Settings(
                     }
                 }
             }
+
+            hr { margin_top: "10px" }
+            div {
+                margin_top: "10px",
+                "Data protection"
+                div {
+                    margin_top: "5px",
+                    form {
+                        action: "",
+                        onsubmit: move |event| event.stop_propagation(),
+                        input {
+                            r#type: "checkbox",
+                            checked: data_protection() == DataProtection::Protected,
+                            onchange: move |event| {
+                                match event.checked() {
+                                    true => data_protection.set(DataProtection::Protected),
+                                    false => data_protection.set(DataProtection::Unprotected),
+                                }
+                            },
+                        }
+                        " {data_protection_memo}"
+                    }
+                }
+            }
+
         }
     }
 }

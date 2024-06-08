@@ -26,7 +26,8 @@ use dioxus_free_icons::icons::md_navigation_icons::{MdArrowDropDown, MdArrowDrop
 use dioxus_std::storage::{LocalStorage, use_synced_storage};
 use futures_util::StreamExt;
 
-use crate::model::default_sort_direction;
+use crate::model::{default_sort_direction, WordKey};
+use crate::storage_global::get_storage;
 use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
 use crate::ui::export_data::ExportData;
 use crate::ui::folders::Folders;
@@ -66,6 +67,12 @@ impl From<String> for Navigation {
             Navigation::ImportData
         }
     }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub(crate) enum DataProtection {
+    Protected,
+    Unprotected,
 }
 
 #[component]
@@ -108,6 +115,27 @@ pub fn Navigation() -> Element {
 
     let show_add_word_form = use_synced_storage::<LocalStorage, u8>(
         "show_add_word_form".to_string(), || 255u8);
+
+    let data_protection = use_signal(|| DataProtection::Protected);
+
+    let _delete_word = use_coroutine(|mut rx: UnboundedReceiver<WordKey>| {
+        to_owned![refresh_words];
+        async move {
+            while let Some(word_key) = rx.next().await {
+                match data_protection() {
+                    // FIXME Find a better place for the messages
+                    DataProtection::Protected => {
+                        navigation_error_str.set("Data protection is set. Check the settings to disable it".to_string());
+                    }
+                    DataProtection::Unprotected => {
+                        let _ = get_storage().delete_word(word_key.id).await;
+                        refresh_words.toggle();
+                        navigation_error_str.set("Word was deleted".to_string());
+                    }
+                }
+            }
+        }
+    });
 
     let current_tab_data = use_memo(move || CURRENT_TAB_DATA());
 
@@ -227,6 +255,7 @@ pub fn Navigation() -> Element {
                             folders_offset: folders_offset,
                             words_page_length: words_page_length,
                             words_offset: words_page_offset,
+                            data_protection: data_protection,
                         }
                     }
                 }
