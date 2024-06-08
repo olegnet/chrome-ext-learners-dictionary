@@ -16,22 +16,25 @@
 
 #![allow(non_upper_case_globals)]
 
+use std::collections::HashMap;
+
 use chrono::Utc;
 use lazy_static::lazy_static;
 use rexie::Direction;
 use rexie::Direction::{Next, Prev};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)] // FIXME
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct Folder {
     pub folder: String,
     pub folder_note: String,
     pub datetime: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)] // FIXME
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct Word {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<u32>,
     pub folder: String,
     pub word: String,
     pub word_class: String,
@@ -40,31 +43,32 @@ pub struct Word {
     pub datetime: i64,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)] // FIXME
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct Data {
     pub version: u32,
     pub folders: Vec<Folder>,
     pub words: Vec<Word>,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)] // FIXME
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct FoldersAndCount {
     pub folders: Vec<Folder>,
     pub count: u32,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)] // FIXME
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct WordsAndCount {
     pub words: Vec<Word>,
     pub count: u32,
 }
 
-pub type WordKey = u32;
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
+pub struct WordKey {
+    pub id: u32,
+}
 
-pub const sort_directions: [(&'static str, Direction); 2] = [
-    ("ascending", Next),
-    ("descending", Prev),
-];
+pub const sort_directions: [(&'static str, Direction); 2] =
+    [("ascending", Next), ("descending", Prev)];
 
 lazy_static! {
     pub static ref default_sort_direction: &'static str = sort_directions.get(0).unwrap().0;
@@ -91,6 +95,7 @@ impl Word {
         note: &String,
     ) -> Word {
         Word {
+            id: None,
             folder: folder.clone(),
             word: word.clone(),
             word_class: word_class.clone(),

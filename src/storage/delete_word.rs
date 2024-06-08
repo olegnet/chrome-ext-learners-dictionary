@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-use crate::model::{Word, WordKey};
 use crate::storage::{OBJ_STORE_WORDS, Storage};
 use crate::storage::storage_error::StorageError;
 
-#[allow(dead_code)] // used in tests
 impl Storage {
-    pub(crate) async fn get_by_id(&self, id: &WordKey) -> Result<Word, StorageError> {
-        let key = serde_wasm_bindgen::to_value(id)?;
+    pub(crate) async fn delete_word(&self, id: u32) -> Result<(), StorageError> {
+        let key = serde_wasm_bindgen::to_value(&id)?;
 
-        let js_result = self.get_store(OBJ_STORE_WORDS)?.get(&key).await?;
+        let tc = self.get_transaction(OBJ_STORE_WORDS)?;
 
-        let result = serde_wasm_bindgen::from_value(js_result)?;
+        let result = tc.store.delete(&key).await?;
+
+        tc.transaction.commit().await?;
 
         Ok(result)
     }

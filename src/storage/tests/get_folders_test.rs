@@ -46,11 +46,11 @@ mod tests {
             .add_folder(&Folder::new(&"folder-0-4".to_string(), &"note-0".to_string()))
             .await;
         // debug!("err: {:?}", err);
-        assert_eq!(err, Ok(()));        // it's ok to add duplicates (for now)
+        assert_ne!(err, Ok(()));
 
         let result = storage.get_folders(None, None, String::new()).await.unwrap();
         debug!("result.len(): {:?}", &result.folders.len());
-        assert_eq!(&(data.len() + 1 /* the duplicate */), &result.folders.len());
+        assert_eq!(&(data.len()), &result.folders.len());
 
         let mut result_map: HashMap<String, Folder> = HashMap::with_capacity(length as usize);
         result.folders.iter().for_each(|x| {

@@ -20,13 +20,13 @@ mod tests {
 
     use wasm_bindgen_test::wasm_bindgen_test;
 
-    use crate::storage::Storage;
     use crate::model::Word;
+    use crate::storage::Storage;
     use crate::tests::test_init;
 
     #[wasm_bindgen_test(async)]
-    async fn add_word_test() {
-        test_init("add_word_test");
+    async fn delete_word_test() {
+        test_init("delete_word_test");
         let storage = Storage::open().await.unwrap();
 
         let mut data: HashMap<u32, Word> = HashMap::with_capacity(10);
@@ -36,7 +36,7 @@ mod tests {
             let word_class = format!("word-class-{}", i);
             let url = format!("url-{}", i);
             let note = format!("note-{}", i);
-            let folder = format!("folder-{}", i);
+            let folder = format!("folder-{}-10", i);
             let id = storage
                 .add_word(&Word::new(&folder, &word, &word_class, &url, &note))
                 .await
@@ -62,6 +62,12 @@ mod tests {
             assert_eq!(word.word_class, result.word_class);
             assert_eq!(word.note, result.note);
             assert_ne!(word.datetime, result.datetime);
+
+            storage.delete_word(word.id.unwrap()).await.unwrap();
+
+            let result = storage.get_word_by_id(word.id.unwrap()).await;
+            // debug!("get_by_id: {:?}", &result);
+            assert!(matches!(result, Err(_)));
         }
     }
 }

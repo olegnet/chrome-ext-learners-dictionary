@@ -45,12 +45,13 @@ mod tests {
                 let word_class = format!("word-class-{}", j);
                 let url = format!("url-{}", j);
                 let note = format!("note-{}", j);
-                let _id = storage
+                let id = storage
                     .add_word(&Word::new(&folder_name, &word, &word_class, &url, &note))
                     .await
                     .unwrap();
 
                 words.push(Word {
+                    id: Some(id),
                     folder: folder_name.clone(),
                     word,
                     word_class,

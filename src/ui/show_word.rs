@@ -20,9 +20,8 @@ use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fi_icons::{FiSearch, FiTrash};
-use log::error;
 
-use crate::model::Word;
+use crate::model::{Word, WordKey};
 use crate::ui::{dictionaryLookup, openUrl};
 
 #[component]
@@ -30,6 +29,9 @@ pub(crate) fn ShowWord(
     word: ReadOnlySignal<Word>,
     background_color: &'static str,
 ) -> Element {
+    let word_key = use_coroutine_handle::<WordKey>();
+
+    let id = word().id.unwrap();
     let word_str = word().word;
     let word_class = word().word_class;
     let note = word().note;
@@ -68,7 +70,7 @@ pub(crate) fn ShowWord(
                 a { class: class!(inline_block),
                     margin_right: "5px",
                     href: "#",
-                    onclick: move |_| { error!("FIXME!");  },         // TODO
+                    onclick: move |_| { word_key.send(WordKey{ id });  },
                     Icon {
                         fill: "black",
                         height: 15,

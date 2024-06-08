@@ -40,11 +40,11 @@ mod tests {
         let folders_index_names = storage.get_store(OBJ_STORE_FOLDERS)
             .unwrap()
             .index_names();
-        assert_eq!(0, folders_index_names.len());
+        assert_eq!(vec!["folder"], folders_index_names);
 
         let words_index_names = storage.get_store(OBJ_STORE_WORDS)
             .unwrap()
             .index_names();
-        assert_eq!(vec!["folder"], words_index_names);
+        assert_eq!(vec!["folder", "words"], words_index_names);
     }
 }

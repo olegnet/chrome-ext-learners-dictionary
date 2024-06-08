@@ -18,13 +18,13 @@ use log::debug;
 
 use crate::model::Data;
 use crate::storage::{
-    IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR, ObjStoreName, Storage, StorageError,
+    HasId, IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR, ObjStoreName, Storage, StorageError,
 };
 
 impl Storage {
     pub(crate) async fn import_data(&self, json: String) -> Result<Data, StorageError> {
         let data: Data = serde_json::from_str(json.as_str())?;
-        debug!("import: data: {:?}", &data);
+        // debug!("import: data: {:?}", &data);
 
         if data.version != IMPORT_EXPORT_DATA_VERSION {
             return Err(StorageError::ImportError(INVALID_VERSION_ERROR.to_string()));
@@ -39,13 +39,24 @@ impl Storage {
 
     async fn import<T>(&self, data: &Vec<T>) -> Result<(), StorageError>
     where
-        T: serde::Serialize + ObjStoreName,
+        T: serde::Serialize + ObjStoreName + HasId<T>,
     {
         let tc = self.get_transaction(T::OBJ_STORE_NAME)?;
         for value in data {
-            let js_value = serde_wasm_bindgen::to_value(&value)?;
-            let _result = tc.store.add(&js_value, None).await?;
-            // trace!("add_items: result: {:?}", &result);
+            let js_value = serde_wasm_bindgen::to_value(value)?;
+            let result = tc.store.add(&js_value, None).await?;
+            debug!("import: result: {:?}", &result);
+
+            if T::USE_ID {
+                let id: u32 = serde_wasm_bindgen::from_value(result.clone())?;
+                debug!("import: id: {:?}", &result);
+
+                let word_with_id = value.set_id(Some(id));
+                let js_word_with_id = serde_wasm_bindgen::to_value(&word_with_id)?;
+
+                let result = tc.store.put(&js_word_with_id, Some(&result)).await?;
+                debug!("import: put: result: {:?}", &result);
+            }
         }
         tc.transaction.commit().await?;
         Ok(())

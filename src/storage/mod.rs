@@ -17,17 +17,18 @@
 use std::fmt::Debug;
 
 use rexie::Rexie;
-use crate::model::{Folder, Word};
 
+use crate::model::{Folder, Word};
 use crate::storage::storage_error::StorageError;
 
 mod add_folder;
 mod add_word;
+mod delete_word;
 mod export_data;
-mod get_by_id;
 mod get_folders;
 mod get_store;
 mod get_transaction;
+mod get_word_by_id;
 mod get_words;
 mod import_data;
 mod open;
@@ -62,4 +63,28 @@ impl ObjStoreName for Folder {
 
 impl ObjStoreName for Word {
     const OBJ_STORE_NAME: &'static str = OBJ_STORE_WORDS;
+}
+
+trait HasId<T> {
+    const USE_ID: bool;
+
+    fn set_id(&self, id: Option<u32>) -> T;
+}
+
+impl HasId<Folder> for Folder {
+    const USE_ID: bool = false;
+
+    fn set_id(&self, _id: Option<u32>) -> Folder {
+        self.clone()
+    }
+}
+
+impl HasId<Word> for Word {
+    const USE_ID: bool = true;
+
+    fn set_id(&self, id: Option<u32>) -> Word {
+        let mut word = self.clone();
+        word.id = id;
+        word
+    }
 }

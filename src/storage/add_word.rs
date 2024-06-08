@@ -16,20 +16,28 @@
 
 use log::trace;
 
-use crate::model::{Word, WordKey};
+use crate::model::Word;
 use crate::storage::{OBJ_STORE_WORDS, Storage, StorageError};
 
 impl Storage {
-    pub(crate) async fn add_word(&self, word: &Word) -> Result<WordKey, StorageError> {
-        let word = serde_wasm_bindgen::to_value(&word)?;
+    pub(crate) async fn add_word(&self, word: &Word) -> Result<u32, StorageError> {
+        let js_word = serde_wasm_bindgen::to_value(&word)?;
 
         let tc = self.get_transaction(OBJ_STORE_WORDS)?;
 
-        let result = tc.store.add(&word, None).await?;
-        trace!("[wasm] add_word: result: {:?}", &result);
+        let result = tc.store.add(&js_word, None).await?;
+        trace!("[wasm] add_word: add: result: {:?}", &result);
+
+        let id: u32 = serde_wasm_bindgen::from_value(result.clone())?;
+        let mut word_with_id = word.clone();
+        word_with_id.id = Some(id);
+        let js_word_with_id = serde_wasm_bindgen::to_value(&word_with_id)?;
+
+        let result = tc.store.put(&js_word_with_id, Some(&result)).await?;
+        trace!("[wasm] add_word: put: result: {:?}", &result);
 
         tc.transaction.commit().await?;
 
-        Ok(serde_wasm_bindgen::from_value(result)?)
+        Ok(id)
     }
 }

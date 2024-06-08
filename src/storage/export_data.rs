@@ -15,7 +15,7 @@
  */
 
 use crate::model::{Data, Folder, Word};
-use crate::storage::{IMPORT_EXPORT_DATA_VERSION, ObjStoreName, Storage, StorageError};
+use crate::storage::{HasId, IMPORT_EXPORT_DATA_VERSION, ObjStoreName, Storage, StorageError};
 
 impl Storage {
     pub(crate) async fn export_data(&self) -> Result<String, StorageError> {
@@ -31,7 +31,7 @@ impl Storage {
 
     async fn export_store<T>(&self) -> Result<Vec<T>, StorageError>
     where
-        T: serde::de::DeserializeOwned + ObjStoreName,
+        T: serde::de::DeserializeOwned + ObjStoreName + HasId<T>,
     {
         let result: Vec<T> = self
             .get_store(T::OBJ_STORE_NAME)?
@@ -39,7 +39,9 @@ impl Storage {
             .await?
             .into_iter()
             .map(|value| {
-                serde_wasm_bindgen::from_value(value.1).unwrap() // FIXME
+                serde_wasm_bindgen::from_value::<T>(value.1)
+                    .unwrap() // FIXME
+                    .set_id(None)
             })
             .collect();
         Ok(result)

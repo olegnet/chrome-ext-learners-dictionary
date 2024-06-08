@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-mod add_folders_and_words_test;
-mod add_word_test;
-mod delete_word_test;
-mod export_data_test;
-mod get_folders_test;
-mod get_words_test;
-mod import_data_test;
-mod storage_open_test;
+use crate::model::Word;
+use crate::storage::{OBJ_STORE_WORDS, Storage};
+use crate::storage::storage_error::StorageError;
+
+impl Storage {
+    #[allow(dead_code)] // used in tests
+    pub(crate) async fn get_word_by_id(&self, id: u32) -> Result<Word, StorageError> {
+        let key = serde_wasm_bindgen::to_value(&id)?;
+
+        let js_result = self.get_store(OBJ_STORE_WORDS)?.get(&key).await?;
+
+        let result = serde_wasm_bindgen::from_value(js_result)?;
+
+        Ok(result)
+    }
+}
