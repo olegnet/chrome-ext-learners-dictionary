@@ -17,7 +17,6 @@
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use log::debug;
 
     use wasm_bindgen_test::wasm_bindgen_test;
 
@@ -25,7 +24,6 @@ mod tests {
     use crate::model::Folder;
     use crate::tests::test_init;
 
-    #[ignore = "should run separately"]
     #[wasm_bindgen_test(async)]
     async fn get_folders_test() {
         test_init("get_folders_test");
@@ -49,7 +47,7 @@ mod tests {
         assert_ne!(err, Ok(()));
 
         let result = storage.get_folders(None, None, String::new()).await.unwrap();
-        debug!("result.len(): {:?}", &result.folders.len());
+        // debug!("result.len(): {:?}", &result.folders.len());
         assert_eq!(&(data.len()), &result.folders.len());
 
         let mut result_map: HashMap<String, Folder> = HashMap::with_capacity(length as usize);

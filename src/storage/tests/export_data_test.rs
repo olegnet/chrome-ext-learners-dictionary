@@ -34,7 +34,7 @@ mod tests {
         let words_len = 10;
 
         for i in 0..folders_len {
-            let folder_name = format!("folder-{}-6", i);
+            let folder_name = format!("folder-{}-3", i);
             let folder_note = format!("note-{}", i);
             let folder = Folder::new(&folder_name, &folder_note);
             storage.add_folder(&folder).await.unwrap();
