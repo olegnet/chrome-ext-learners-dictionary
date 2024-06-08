@@ -33,6 +33,7 @@ pub(crate) fn ShowFolder(
     let navigation = use_coroutine_handle::<Navigation>();
     let folder_key = use_coroutine_handle::<FolderKey>();
 
+    let id = folder().id.unwrap();
     let folder_str = folder().folder;
     let folder_note_str = folder().folder_note;
 
@@ -57,7 +58,7 @@ pub(crate) fn ShowFolder(
                 a { class: class!(inline_block),
                     margin_right: "5px",
                     href: "#",
-                    onclick: move |_| folder_key.send(FolderKey{ folder: folder().folder }),
+                    onclick: move |_| folder_key.send(FolderKey{ id }),
                     Icon {
                         fill: "black",
                         height: 15,

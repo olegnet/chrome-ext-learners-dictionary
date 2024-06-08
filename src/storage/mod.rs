@@ -23,7 +23,7 @@ use crate::storage::storage_error::StorageError;
 
 mod add_folder;
 mod add_word;
-mod delete_word;
+mod delete_by_id;
 mod export_data;
 mod get_folders;
 mod get_store;
@@ -53,7 +53,7 @@ pub struct Storage {
     rexie: Rexie,
 }
 
-trait ObjStoreName {
+pub(crate) trait ObjStoreName {
     const OBJ_STORE_NAME: &'static str;
 }
 
@@ -66,22 +66,18 @@ impl ObjStoreName for Word {
 }
 
 trait HasId<T> {
-    const USE_ID: bool;
-
     fn set_id(&self, id: Option<u32>) -> T;
 }
 
 impl HasId<Folder> for Folder {
-    const USE_ID: bool = false;
-
-    fn set_id(&self, _id: Option<u32>) -> Folder {
-        self.clone()
+    fn set_id(&self, id: Option<u32>) -> Folder {
+        let mut folder = self.clone();
+        folder.id = id;
+        folder
     }
 }
 
 impl HasId<Word> for Word {
-    const USE_ID: bool = true;
-
     fn set_id(&self, id: Option<u32>) -> Word {
         let mut word = self.clone();
         word.id = id;

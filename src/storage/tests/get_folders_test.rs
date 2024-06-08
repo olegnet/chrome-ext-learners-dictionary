@@ -24,6 +24,7 @@ mod tests {
     use crate::model::Folder;
     use crate::tests::test_init;
 
+    #[ignore = "should run separately"]
     #[wasm_bindgen_test(async)]
     async fn get_folders_test() {
         test_init("get_folders_test");

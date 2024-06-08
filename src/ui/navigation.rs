@@ -26,7 +26,7 @@ use dioxus_free_icons::icons::md_navigation_icons::{MdArrowDropDown, MdArrowDrop
 use dioxus_std::storage::{LocalStorage, use_synced_storage};
 use futures_util::StreamExt;
 
-use crate::model::{default_sort_direction, FolderKey, WordKey};
+use crate::model::{default_sort_direction, Folder, FolderKey, Word, WordKey};
 use crate::storage_global::get_storage;
 use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
 use crate::ui::export_data::ExportData;
@@ -128,7 +128,7 @@ pub fn Navigation() -> Element {
                     // FIXME Find a better place for the messages
                     DataProtection::Protected => data_protection_error(),
                     DataProtection::Unprotected => {
-                        let _ = get_storage().delete_word(word_key.id).await;
+                        let _ = get_storage().delete_by_id::<Word>(word_key.id).await;
                         refresh_words.toggle();
                         navigation_error_str.set("Word was deleted".to_string());
                     }
@@ -144,9 +144,9 @@ pub fn Navigation() -> Element {
                 match data_protection() {
                     DataProtection::Protected => data_protection_error(),
                     DataProtection::Unprotected => {
-                        // FIXME let _ = get_storage().delete_folder(folder_key.folder).await;
+                        let _ = get_storage().delete_by_id::<Folder>(folder_key.id).await;
                         refresh_folders.toggle();
-                        navigation_error_str.set(format!("Folder {} was deleted", folder_key.folder));
+                        navigation_error_str.set("Folder was deleted".to_string());
                     }
                 }
             }

@@ -18,7 +18,7 @@ use log::debug;
 
 use crate::model::Data;
 use crate::storage::{
-    HasId, IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR, ObjStoreName, Storage, StorageError,
+    HasId, ObjStoreName, Storage, StorageError, IMPORT_EXPORT_DATA_VERSION, INVALID_VERSION_ERROR,
 };
 
 impl Storage {
@@ -47,16 +47,14 @@ impl Storage {
             let result = tc.store.add(&js_value, None).await?;
             debug!("import: result: {:?}", &result);
 
-            if T::USE_ID {
-                let id: u32 = serde_wasm_bindgen::from_value(result.clone())?;
-                debug!("import: id: {:?}", &result);
+            let id: u32 = serde_wasm_bindgen::from_value(result.clone())?;
+            debug!("import: id: {:?}", &result);
 
-                let word_with_id = value.set_id(Some(id));
-                let js_word_with_id = serde_wasm_bindgen::to_value(&word_with_id)?;
+            let word_with_id = value.set_id(Some(id));
+            let js_word_with_id = serde_wasm_bindgen::to_value(&word_with_id)?;
 
-                let result = tc.store.put(&js_word_with_id, Some(&result)).await?;
-                debug!("import: put: result: {:?}", &result);
-            }
+            let result = tc.store.put(&js_word_with_id, Some(&result)).await?;
+            debug!("import: put: result: {:?}", &result);
         }
         tc.transaction.commit().await?;
         Ok(())

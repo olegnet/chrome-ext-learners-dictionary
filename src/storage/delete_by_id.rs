@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-use crate::storage::{OBJ_STORE_WORDS, Storage};
+use crate::storage::{ObjStoreName, Storage};
 use crate::storage::storage_error::StorageError;
 
 impl Storage {
-    pub(crate) async fn delete_word(&self, id: u32) -> Result<(), StorageError> {
+    pub(crate) async fn delete_by_id<T>(&self, id: u32) -> Result<(), StorageError>
+        where T: ObjStoreName
+    {
         let key = serde_wasm_bindgen::to_value(&id)?;
 
-        let tc = self.get_transaction(OBJ_STORE_WORDS)?;
+        let tc = self.get_transaction(T::OBJ_STORE_NAME)?;
 
         let result = tc.store.delete(&key).await?;
 

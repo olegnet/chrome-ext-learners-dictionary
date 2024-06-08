@@ -63,7 +63,7 @@ mod tests {
             assert_eq!(word.note, result.note);
             assert_ne!(word.datetime, result.datetime);
 
-            storage.delete_word(word.id.unwrap()).await.unwrap();
+            storage.delete_by_id::<Word>(word.id.unwrap()).await.unwrap();
 
             let result = storage.get_word_by_id(word.id.unwrap()).await;
             // debug!("get_by_id: {:?}", &result);

@@ -26,6 +26,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct Folder {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<u32>,
     pub folder: String,
     pub folder_note: String,
     pub datetime: i64,
@@ -69,7 +71,7 @@ pub struct WordKey {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone, Hash, Eq)]
 pub struct FolderKey {
-    pub folder: String,
+    pub id: u32,
 }
 
 pub const sort_directions: [(&'static str, Direction); 2] =
@@ -84,6 +86,7 @@ lazy_static! {
 impl Folder {
     pub fn new(folder: &String, folder_note: &String) -> Folder {
         Folder {
+            id: None,
             folder: folder.clone(),
             folder_note: folder_note.clone(),
             datetime: Utc::now().timestamp_millis(),
