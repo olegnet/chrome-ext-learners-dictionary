@@ -37,6 +37,7 @@ pub(crate) fn Folders(
     direction: Signal<String>,
     refresh_folders: Signal<u8>,
     show_add_folder_form: Signal<u8>,
+    words_page_offset: Signal<Option<u32>>,
 ) -> Element {
     debug!("Folders: {} {}", refresh_folders.peek(), show_add_folder_form.peek());
 
@@ -69,6 +70,7 @@ pub(crate) fn Folders(
                     ShowFolder {
                         folder: folder.to_owned(),
                         selected_folder_str: selected_folder_str,
+                        words_page_offset: words_page_offset,
                         background_color: match index % 2 { 0 => bg_gray_200, _ => "" },
                     }
                 }

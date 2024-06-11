@@ -244,6 +244,7 @@ pub fn Navigation() -> Element {
                             direction: folders_direction,
                             refresh_folders: refresh_folders,
                             show_add_folder_form: show_add_folder_form,
+                            words_page_offset: words_page_offset,
                         }
                     }
                 }

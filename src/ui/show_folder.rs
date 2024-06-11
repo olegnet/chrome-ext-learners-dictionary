@@ -28,6 +28,7 @@ use crate::ui::navigation::Navigation;
 pub(crate) fn ShowFolder(
     folder: ReadOnlySignal<Folder>,
     selected_folder_str: Signal<String>,
+    words_page_offset: Signal<Option<u32>>,
     background_color: &'static str,
 ) -> Element {
     let navigation = use_coroutine_handle::<Navigation>();
@@ -44,6 +45,9 @@ pub(crate) fn ShowFolder(
                 a { class: class!(underline),
                     href: "#",
                     onclick: move |_| {
+                        if selected_folder_str() != folder_str {
+                            words_page_offset.set(None);
+                        }
                         selected_folder_str.set(folder_str.to_owned());
                         navigation.send(Navigation::Words);
                     },
