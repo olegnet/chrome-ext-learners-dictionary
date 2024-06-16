@@ -31,7 +31,6 @@ use crate::storage_global::get_storage;
 use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
 use crate::ui::export_data::ExportData;
 use crate::ui::folders::Folders;
-use crate::ui::icons::EmptyIcon;
 use crate::ui::import_data::ImportData;
 use crate::ui::settings::Settings;
 use crate::ui::show_copyright::ShowCopyright;
@@ -169,64 +168,60 @@ pub fn Navigation() -> Element {
             margin_top: "5px",
             form { action: "",
                 onsubmit: move |event| event.stop_propagation(),
-                label {
-                    title: "Folders",
-                    button { class: class!(btn btn_sm),
-                        onclick: move |_| navigation.send(Navigation::Folders),
-                        Icon {
-                            fill: "black",
-                            icon: MdFolder,
+
+                div { class: class!(flex flex_row items_baseline),
+                    label { title: "Folders",
+                        button { class: class!(btn btn_sm flex_none),
+                            onclick: move |_| navigation.send(Navigation::Folders),
+                            Icon {
+                                fill: "black",
+                                icon: MdFolder,
+                            }
+                            "Folders"
                         }
-                        "Folders"
                     }
-                }
-                label {
-                    title: "Show add folder form",
-                    margin_left: "2px",
                     ShowFormButton {
+                        title: "Show add folder form",
                         navigation_state: navigation_state,
                         form_state: Navigation::Folders,
                         show_form: show_add_folder_form,
                     }
-                }
-                label {
-                    margin_left: "5px",
-                    title: "Words",
-                    button { class: class!(btn btn_sm),
-                        onclick: move |_| {
-                            if selected_folder_str().len() != 0 {
-                                navigation.send(Navigation::Words);
-                            } else {
-                                navigation_error_str.set(msg_select_folder_first.to_string());
+                    label { title: "Words",
+                        button { class: class!(btn btn_sm flex_none),
+                            margin_left: "1px",
+                            margin_right: "1px",
+                            onclick: move |_| {
+                                if selected_folder_str().len() != 0 {
+                                    navigation.send(Navigation::Words);
+                                } else {
+                                    navigation_error_str.set(msg_select_folder_first.to_string());
+                                }
+                            },
+                            Icon {
+                                fill: "black",
+                                icon: MdNotes,
                             }
-                        },
-                        Icon {
-                            fill: "black",
-                            icon: MdNotes,
+                            "Words"
                         }
-                        "Words"
                     }
-                }
-                label {
-                    title: "Show add word form",
-                    margin_left: "2px",
                     ShowFormButton {
+                        title: "Show add word form",
                         navigation_state: navigation_state,
                         form_state: Navigation::Words,
                         show_form: show_add_word_form,
                     }
-                }
-                label {
-                    margin_left: "5px",
-                    title: "Settings",
-                    button { class: class!(btn btn_sm),
-                        onclick: move |_| navigation.send(Navigation::Settings),
-                        Icon {
-                            fill: "black",
-                            icon: MdSettings,
+                    label { title: "Settings",
+                        button { class: class!(btn btn_sm flex_none),
+                            margin_left: "5px",
+                            onclick: move |_| navigation.send(Navigation::Settings),
+                            Icon {
+                                fill: "black",
+                                icon: MdSettings,
+                            }
                         }
                     }
                 }
+
                 p { class: class!(text_xs text_red_500),
                     "{navigation_error_str}"
                 }
@@ -296,37 +291,27 @@ pub fn Navigation() -> Element {
 
 #[component]
 pub fn ShowFormButton(
+    title: &'static str,
     navigation_state: Signal<Navigation>,
     form_state: Navigation,
     show_form: Signal<u8>,
 ) -> Element {
-    let is_button_disabled = navigation_state() != form_state;
-    let button_style = if is_button_disabled {
-        "background-color: transparent; border-color: transparent;" // FIXME button's shadow
-    } else { "" };
-
     rsx! {
-        button { class: class!(btn btn_sm),
-            style: "{button_style}",
-            disabled: is_button_disabled,
-            onclick: move |_| show_form.toggle(),
-            if navigation_state() == form_state {
-                if show_form() == 0u8 {
-                    Icon {
-                        fill: "black",
-                        icon: MdArrowDropDown,
-                    }
-                } else {
-                    Icon {
-                        fill: "black",
-                        icon: MdArrowDropUp,
+        if navigation_state() == form_state {
+            label { title: title,
+                button { class: class!(btn btn_sm flex_none pl_2 pr_2),
+                    margin_left: "1px",
+                    margin_right: "1px",
+                    onclick: move |_| show_form.toggle(),
+                    if show_form() == 0u8 {
+                        Icon { fill: "black", icon: MdArrowDropDown }
+                    } else {
+                        Icon { fill: "black", icon: MdArrowDropUp }
                     }
                 }
-            } else {
-                Icon {
-                    fill: "black",
-                    icon: EmptyIcon,
-                }
+            }
+        } else {
+            span { class: class!(flex_none w_10 pl_2 pr_2)
             }
         }
     }
