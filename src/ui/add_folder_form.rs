@@ -42,61 +42,62 @@ pub(crate) fn AddFolderForm(
     });
 
     rsx! {
-        div { class: class!(grid grid_cols_1 text_base),
-            margin_left: "5px",
-            form {
-                margin_top: "15px",
-                action: "",
-                onsubmit: move |event| {
-                    event.stop_propagation();
+        form { class: class!(mx_1 my_4),
+            action: "",
+            onsubmit: move |event| {
+                event.stop_propagation();
 
-                    if folder_str().trim().len() == 0 {
-                        folder_error_str.set(msg_folder_name_is_empty.to_string());
-                    } else {
-                        add_folder.send(Folder::new(
-                            &folder_str(),
-                            &folder_note_str(),
-                        ));
-                        folder_str.set(String::new());
-                        folder_note_str.set(String::new());
-                        folder_error_str.set(String::new());
-                    }
-                },
-                label {
-                    r#for: "folder",
-                    input { class: class!(outline),
-                        oninput: move |event| { 
-                            folder_str.set(event.value());
-                            if folder_str().trim().len() != 0 {
-                                folder_error_str.set(String::new());
-                            }
-                        },
-                        placeholder: "new folder name",
-                        r#type: "text",
-                        id: "folder",
-                        value: "{folder_str}"
+                if folder_str().trim().len() == 0 {
+                    folder_error_str.set(msg_folder_name_is_empty.to_string());
+                } else {
+                    add_folder.send(Folder::new(
+                        &folder_str(),
+                        &folder_note_str(),
+                    ));
+                    folder_str.set(String::new());
+                    folder_note_str.set(String::new());
+                    folder_error_str.set(String::new());
+                }
+            },
+            div { class: class!(grid grid_cols_3 grid_flow_col_dense gap_2 text_base),
+                div { class: class!(col_span_2),
+                    label {
+                        r#for: "folder",
+                        input { class: class!(outline min_w_52),
+                            oninput: move |event| {
+                                folder_str.set(event.value());
+                                if folder_str().trim().len() != 0 {
+                                    folder_error_str.set(String::new());
+                                }
+                            },
+                            placeholder: "new folder name",
+                            r#type: "text",
+                            id: "folder",
+                            value: "{folder_str}"
+                        }
                     }
                 }
-                p { class: class!(text_xs text_red_500),
+                div { class: class!(text_xs text_red_500 col_span_2),
                     "{folder_error_str}"
                 }
-                label {
-                    r#for: "folder_note",
-                    input { class: class!(outline),
-                        margin_top: "5px",
-                        oninput: move |event| folder_note_str.set(event.value()),
-                        placeholder: "note",
-                        r#type: "text",
-                        id: "folder_note",
-                        value: "{folder_note_str}"
+                div { class: class!(col_span_2),
+                    label {
+                        r#for: "folder_note",
+                        input { class: class!(outline min_w_52),
+                            oninput: move |event| folder_note_str.set(event.value()),
+                            placeholder: "note",
+                            r#type: "text",
+                            id: "folder_note",
+                            value: "{folder_note_str}"
+                        }
                     }
                 }
-                label {
-                    title: "Add folder",
-                    button { class: class!(btn btn_sm btn_outline),
-                        margin_top: "5px",
-                        margin_left: "5px",
-                        "Add folder"
+                div { class: class!(row_span_3 self_center my_4),
+                    label {
+                        title: "Add folder",
+                        button { class: class!(btn btn_sm btn_outline),
+                            "Add folder"
+                        }
                     }
                 }
             }
