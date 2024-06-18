@@ -4,7 +4,7 @@ CHROMEDRIVER_PATH = "../tests/chromedriver"
 # Build
 
 [tasks.build]
-dependencies = ["build_wasm_pack", "copy"]  # TODO add "tailwindcss"
+alias = "copy"
 
 [tasks.build_wasm_pack]
 command = "wasm-pack"
@@ -14,6 +14,7 @@ args = ["build", "--target", "web", "--release"]
 command = "cp"
 args = ["-v", "background.js", "content-script.js", "manifest.json", "sidepanel.css", "sidepanel.html",
     "sidepanel.js", "pkg/"]
+dependencies = ["build_wasm_pack"]  # TODO add "tailwindcss"
 
 # Build css
 
