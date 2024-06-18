@@ -1,11 +1,17 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test" type="WasmPackCommandRunConfiguration" factoryName="wasm-pack" nameIsGenerated="true">
-    <option name="command" value="test --chrome --headless --chromedriver $PROJECT_DIR$/../tests/chromedriver" />
+  <configuration default="false" name="Test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="command" value="make test" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$" />
     <envs />
     <option name="emulateTerminal" value="true" />
-    <method v="2">
-      <option name="WASM_PACK.BUILD_TASK_PROVIDER" enabled="true" />
-    </method>
+    <option name="channel" value="DEFAULT" />
+    <option name="requiredFeatures" value="false" />
+    <option name="allFeatures" value="false" />
+    <option name="withSudo" value="false" />
+    <option name="buildTarget" value="REMOTE" />
+    <option name="backtrace" value="SHORT" />
+    <option name="isRedirectInput" value="false" />
+    <option name="redirectInputPath" value="" />
+    <method v="2" />
   </configuration>
 </component>
