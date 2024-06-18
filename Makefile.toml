@@ -1,0 +1,45 @@
+[env]
+CHROMEDRIVER_PATH = "../tests/chromedriver"
+
+# Build
+
+[tasks.build]
+dependencies = ["build_wasm_pack", "copy"]  # TODO add "tailwindcss"
+
+[tasks.build_wasm_pack]
+command = "wasm-pack"
+args = ["build", "--target", "web", "--release"]
+
+[tasks.copy]
+command = "cp"
+args = ["-v", "background.js", "content-script.js", "manifest.json", "sidepanel.css", "sidepanel.html",
+    "sidepanel.js", "pkg/"]
+
+# Build css
+
+[tasks.tailwindcss]
+command = "npx"
+args = ["tailwindcss", "-c", "tailwind.config.js", "-o", "pkg/style.css"]
+
+[tasks.tailwindcss_debug]
+command = "npx"
+args = ["tailwindcss", "-c", "tailwind.debug.js", "-o", "pkg/style.css"]
+
+# Test
+
+[tasks.test]
+command = "wasm-pack"
+args = ["test", "--chrome", "--headless", "--chromedriver", "${CHROMEDRIVER_PATH}"]
+
+# Clean
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+dependencies = ["clean_pkg"]
+
+[tasks.clean_pkg]
+script_runner = "sh"
+script = 'find ./pkg ! -name style.css -delete'
+#command = "rm"
+#args = ["-r", "pkg"]

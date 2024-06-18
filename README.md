@@ -12,10 +12,16 @@
    cargo install wasm-pack
    ```
 
-3. Build
+3. Install [cargo-make](https://sagiegurari.github.io/cargo-make/)
 
    ```bash
-   wasm-pack build --target web --release
+   cargo install --force cargo-make
+   ```
+
+4. Build
+
+   ```bash
+   cargo make build
    ```
 
 4. Build style.css
@@ -23,7 +29,7 @@
    ```bash
    npm install -D tailwindcss
    npm install daisyui
-   npx tailwindcss -c ./tailwind.config.js -o ./pkg/style.css
+   cargo make tailwindcss_debug
    ```
    
    See also: [How to generate all classes in Tailwind CSS](https://design2tailwind.com/blog/tailwindcss-generate-all-classes/)
@@ -32,10 +38,12 @@
 5. Run tests with [chromedriver](https://googlechromelabs.github.io/chrome-for-testing/)
 
    ```bash
-   wasm-pack test --chrome --headless --chromedriver /path/to/chromedriver
+   cargo make test
    ```
 
-6. Enable [developer mode in Chrome](chrome://extensions/) and load the extension
+   Check the path to chromedriver binary in [Makefile.toml](Makefile.toml)
+
+6. Enable [developer mode in Chrome](chrome://extensions/) and load the extension from 'pkg' folder
 
 
 7. Go to [oxfordlearnersdictionaries.com](https://www.oxfordlearnersdictionaries.com/) and press Command-B/Ctrl-B to open the extension page

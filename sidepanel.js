@@ -1,6 +1,6 @@
-import init, {on_tab_loaded} from './pkg/dictionary.js'
+import init, {on_tab_loaded} from './dictionary.js'
 
-init("./pkg/dictionary_bg.wasm");
+init("./dictionary_bg.wasm");
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.from_content_script === "loaded") {

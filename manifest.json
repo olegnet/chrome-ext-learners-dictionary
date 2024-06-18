@@ -29,7 +29,7 @@
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
   },
   "web_accessible_resources": [{
-    "resources": ["pkg/dictionary_bg.wasm", "pkg/dictionary.js", "sidepanel.js"],
+    "resources": ["dictionary_bg.wasm", "dictionary.js", "sidepanel.js"],
     "matches": ["*://oxfordlearnersdictionaries.com/*", "*://www.oxfordlearnersdictionaries.com/*"]
   }],
   "commands": {
