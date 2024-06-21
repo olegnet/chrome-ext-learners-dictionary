@@ -19,8 +19,8 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use futures_util::StreamExt;
-use crate::model::Word;
 
+use crate::model::Word;
 use crate::storage_global::get_storage;
 use crate::ui::{BASE_URL, CURRENT_TAB_DATA, msg_folder_name_is_empty, msg_word_is_empty, openUrl};
 
@@ -55,95 +55,126 @@ pub(crate) fn AddWordForm(
     let show_url = current_tab_data().url;
     let show_url = match show_url.strip_prefix(BASE_URL) {
         None => show_url,
-        Some(str) => str.to_string()
+        Some(str) => str.to_string(),
+    };
+
+    let mut clear_form = move || {
+        word_str.set(String::new());
+        word_class_str.set(String::new());
+        note_str.set(String::new());
+        selected_folder_error_str.set(String::new());
+        word_error_str.set(String::new());
+    };
+
+    let mut on_form_submit = move || {
+        if selected_folder_str().trim().len() == 0 {
+            selected_folder_error_str.set(msg_folder_name_is_empty.to_string());
+        } else if word_str().trim().len() == 0 {
+            word_error_str.set(msg_word_is_empty.to_string());
+        } else {
+            add_word.send(Word::new(
+                &selected_folder_str(),
+                &word_str(),
+                &word_class_str(),
+                &current_tab_data().url,
+                &note_str(),
+            ));
+            clear_form();
+        }
     };
 
     rsx! {
-        div {
-            margin_top: "10px",
-            a { class: class!(text_xs),
-                href: "#",
-                margin_top: "5px",
-                onclick: move |_| open_url.send(current_tab_data().url),
-                "{show_url}"
-            }
-            p { class: class!(text_sm),
-                margin_top: "5px",
-                "Folder: {selected_folder_str}"
-            }
-            p { class: class!(text_xs text_red_500),
-                "{selected_folder_error_str}"
-            }
-            form {
-                action: "",
-                onsubmit: move |event| {
-                    event.stop_propagation();
-
-                    if selected_folder_str().trim().len() == 0 {
-                        selected_folder_error_str.set(msg_folder_name_is_empty.to_string());
-                    } else if word_str().trim().len() == 0 {
-                        word_error_str.set(msg_word_is_empty.to_string());
-                    } else {
-                        add_word.send(Word::new(
-                            &selected_folder_str(),
-                            &word_str(),
-                            &word_class_str(),
-                            &current_tab_data().url,
-                            &note_str(),
-                        ));
-                        word_str.set(String::new());
-                        word_class_str.set(String::new());
-                        note_str.set(String::new());
-                        selected_folder_error_str.set(String::new());
-                        word_error_str.set(String::new());
+        form {
+            action: "",
+            onsubmit: move |event| event.stop_propagation(),
+            div { class: class!(grid grid_cols_3 grid_flow_row_dense gap_1 mx_1 my_2 text_base),
+                div { class: class!(col_span_3),
+                    "Folder: "
+                    span { class: class!(italic),
+                        "{selected_folder_str}"
                     }
-                },
-                label { class: class!(text_base),
-                    r#for: "word",
-                    input { class: class!(outline),
-                        margin_top: "5px",
-                        oninput: move |event|  {
-                            word_str.set(event.value());
-                            if word_str().trim().len() != 0 {
-                                word_error_str.set(String::new());
-                            }
-                        },
-                        placeholder: "word or link name",
-                        r#type: "text",
-                        id: "word",
-                        value: "{word_str}"
+                    p { class: class!(text_xs text_red_500),
+                        "{selected_folder_error_str}"
                     }
                 }
-                p { class: class!(text_xs text_red_500),
-                    "{word_error_str}"
-                }
-                label { class: class!(text_base),
-                    r#for: "word_class",
-                    input { class: class!(outline),
-                        margin_top: "5px",
-                        oninput: move |event| word_class_str.set(event.value()),
-                        placeholder: "word class",
-                        r#type: "text",
-                        id: "word_class",
-                        value: "{word_class_str}"
+                div { class: class!(col_span_3),
+                    p { class: class!(text_sm),
+                        "URL to add:"
+                    }
+                    a { class: class!(text_xs text_blue_600 font_bold font_mono bg_gray_200),
+                        href: "#",
+                        onclick: move |_| open_url.send(current_tab_data().url),
+                        "{show_url}"
                     }
                 }
-                label { class: class!(text_base),
-                    r#for: "note",
-                    input { class: class!(outline),
-                        margin_top: "5px",
-                        oninput: move |event| note_str.set(event.value()),
-                        placeholder: "note",
-                        r#type: "text",
-                        id: "note",
-                        value: "{note_str}"
+                div { class: class!(col_span_2),
+                    label {
+                        r#for: "word",
+                        input { class: class!(outline min_w_52),
+                            oninput: move |event|  {
+                                word_str.set(event.value());
+                                if word_str().trim().len() != 0 {
+                                    word_error_str.set(String::new());
+                                }
+                            },
+                            placeholder: "word or link name",
+                            r#type: "text",
+                            id: "word",
+                            value: "{word_str}"
+                        }
                     }
                 }
-                label {
-                    title: "Add word",
-                    button { class: class!(btn btn_sm btn_outline text_base),
-                        margin_left: "5px",
-                        "Add word"
+                div { class: class!(col_span_3),
+                    span { class: class!(text_xs text_red_500),
+                        "{word_error_str}"
+                    }
+                }
+                div { class: class!(col_span_2),
+                    label {
+                        r#for: "word_class",
+                        input { class: class!(outline min_w_52),
+                            oninput: move |event| word_class_str.set(event.value()),
+                            placeholder: "word class",
+                            r#type: "text",
+                            id: "word_class",
+                            value: "{word_class_str}"
+                        }
+                    }
+                }
+                div { class: class!(col_span_3 my_1),
+                    label {
+                        r#for: "note",
+                        input { class: class!(outline min_w_52),
+                            oninput: move |event| note_str.set(event.value()),
+                            placeholder: "note or pronunciation",
+                            r#type: "text",
+                            id: "note",
+                            value: "{note_str}"
+                        }
+                    }
+                }
+                div { class: class!(row_span_1 self_center),
+                    label {
+                        title: "Add word",
+                        button { class: class!(btn btn_sm btn_outline),
+                            onclick: move |event| {
+                                event.stop_propagation();
+                                on_form_submit();
+                            },
+                            "Add word"
+                        }
+                    }
+                }
+                div { class: class!(row_span_1 self_center),
+                    label {
+                        title: "Clear",
+                        button { class: class!(btn btn_sm btn_outline),
+                            onclick: move |event| {
+                                event.stop_propagation();
+                                clear_form();
+                            },
+                            "Clear"
+                        }
                     }
                 }
             }
