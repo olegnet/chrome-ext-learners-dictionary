@@ -23,9 +23,7 @@ use futures_util::StreamExt;
 use crate::ui::dictionaryLookup;
 
 #[component]
-pub(crate) fn SearchForm(
-    search_str: Signal<String>,
-) -> Element {
+pub(crate) fn SearchForm(search_str: Signal<String>) -> Element {
     let dictionary_lookup = use_coroutine(|mut rx| async move {
         while let Some(search) = rx.next().await {
             dictionaryLookup(search).await;
@@ -33,18 +31,17 @@ pub(crate) fn SearchForm(
     });
 
     rsx! {
-        div { class: class!(text_sm),
-            margin_top: "5px",
-            form {
-                action: "",
-                onsubmit: move |event| {
-                    event.stop_propagation();
-                    dictionary_lookup.send(search_str());
-                    search_str.set("".to_string());
-                },
+        form {
+            action: "",
+            onsubmit: move |event| {
+                event.stop_propagation();
+                dictionary_lookup.send(search_str());
+                search_str.set("".to_string());
+            },
+            div { class: class!(flex flex_row items_baseline text_sm mx_1 my_2),
                 label {
                     r#for: "search-text",
-                    input { class: class!(outline),
+                    input { class: class!(outline min_w_52 flex_none),
                         oninput: move |event| search_str.set(event.value()),
                         placeholder: "search",
                         r#type: "text",
@@ -53,9 +50,8 @@ pub(crate) fn SearchForm(
                     }
                 }
                 label {
-                    margin_left: "5px",
                     title: "Search",
-                    button { class: class!(btn btn_sm btn_outline),
+                    button { class: class!(btn btn_sm btn_outline self_center mx_2 flex_none),
                         "Search"
                     }
                 }
