@@ -100,10 +100,11 @@ pub(crate) fn Words(
                 refresh_words: refresh_words,
             }
         } else {
-            div {
-                p { class: class!(text_sm),
-                    margin_top: "5px",
-                    "Folder: {selected_folder_str}"
+            div { class: class!(text_base),
+                margin_top: "5px",
+                "Folder: "
+                span { class: class!(italic),
+                    "{selected_folder_str}"
                 }
             }
         }
