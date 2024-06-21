@@ -29,7 +29,6 @@ mod add_word_form;
 mod error_message;
 mod export_data;
 mod folders;
-mod icons;
 mod import_data;
 mod navigation;
 mod search_form;
