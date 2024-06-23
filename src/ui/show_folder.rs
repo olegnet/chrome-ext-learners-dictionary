@@ -64,7 +64,6 @@ pub(crate) fn ShowFolder(
                     href: "#",
                     onclick: move |_| folder_key.send(FolderKey{ id }),
                     Icon {
-                        fill: "black",
                         height: 15,
                         width: 15,
                         icon: FiTrash,

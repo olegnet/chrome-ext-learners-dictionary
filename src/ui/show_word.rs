@@ -40,11 +40,10 @@ pub(crate) fn ShowWord(
     rsx! {
         div { class: class!(flex items_baseline background_color),
             div { class: class!(flex_none),
-                a { //class: class!(inline_block),
+                a {
                     href: "#",
                     onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
                     Icon {
-                        fill: "black",
                         height: 15,
                         width: 15,
                         icon: FiSearch,
@@ -72,7 +71,6 @@ pub(crate) fn ShowWord(
                     href: "#",
                     onclick: move |_| { word_key.send(WordKey{ id });  },
                     Icon {
-                        fill: "black",
                         height: 15,
                         width: 15,
                         icon: FiTrash,

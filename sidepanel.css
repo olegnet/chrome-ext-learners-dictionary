@@ -5,3 +5,16 @@
     left: 10px;
     height: 100%;
 }
+
+@media (prefers-color-scheme: light) {
+    .lists-second-colors {
+        background-color: #E5E7EB;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .lists-second-colors {
+        color: black;
+        background-color: #9EA6B4;
+    }
+}

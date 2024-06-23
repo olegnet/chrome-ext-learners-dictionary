@@ -173,10 +173,7 @@ pub fn Navigation() -> Element {
                     label { title: "Folders",
                         button { class: class!(btn btn_sm flex_none),
                             onclick: move |_| navigation.send(Navigation::Folders),
-                            Icon {
-                                fill: "black",
-                                icon: MdFolder,
-                            }
+                            Icon { icon: MdFolder }
                             "Folders"
                         }
                     }
@@ -197,10 +194,7 @@ pub fn Navigation() -> Element {
                                     navigation_error_str.set(msg_select_folder_first.to_string());
                                 }
                             },
-                            Icon {
-                                fill: "black",
-                                icon: MdNotes,
-                            }
+                            Icon { icon: MdNotes }
                             "Words"
                         }
                     }
@@ -214,10 +208,7 @@ pub fn Navigation() -> Element {
                         button { class: class!(btn btn_sm flex_none),
                             margin_left: "5px",
                             onclick: move |_| navigation.send(Navigation::Settings),
-                            Icon {
-                                fill: "black",
-                                icon: MdSettings,
-                            }
+                            Icon { icon: MdSettings }
                         }
                     }
                 }
@@ -304,15 +295,14 @@ pub fn ShowFormButton(
                     margin_right: "1px",
                     onclick: move |_| show_form.toggle(),
                     if show_form() == 0u8 {
-                        Icon { fill: "black", icon: MdArrowDropDown }
+                        Icon { icon: MdArrowDropDown }
                     } else {
-                        Icon { fill: "black", icon: MdArrowDropUp }
+                        Icon { icon: MdArrowDropUp }
                     }
                 }
             }
         } else {
-            span { class: class!(flex_none w_10 pl_2 pr_2)
-            }
+            span { class: class!(flex_none w_10 pl_2 pr_2) }
         }
     }
 }

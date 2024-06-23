@@ -22,7 +22,6 @@ use dioxus_daisyui::prelude::*;
 use crate::ui::navigation::{DataProtection, Navigation};
 use crate::ui::page_length::PageLength;
 
-// TODO Fonts sizes, dark theme
 // FIXME add copyrights and fonts creds here
 
 #[component]

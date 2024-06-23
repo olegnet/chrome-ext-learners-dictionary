@@ -71,7 +71,7 @@ pub(crate) fn Folders(
                         folder: folder.to_owned(),
                         selected_folder_str: selected_folder_str,
                         words_page_offset: words_page_offset,
-                        background_color: match index % 2 { 0 => bg_gray_200, _ => "" },
+                        background_color: match index % 2 { 0 => "lists-second-colors", _ => "" },
                     }
                 }
             },

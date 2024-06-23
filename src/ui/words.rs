@@ -44,8 +44,6 @@ pub(crate) fn Words(
     // debug!("Words: {}", refresh_words.peek());
 
     let search_str = use_signal(|| String::new());
-    let selected_word = use_signal(|| None::<u32>);
-    // let selected_word = use_signal(|| Some(10u32));
 
     let words = use_resource(move || async move {
         let _ = refresh_words();
@@ -75,7 +73,7 @@ pub(crate) fn Words(
                 for (index, word) in result.words.iter().enumerate() {
                     ShowWord {
                         word: word.to_owned(),
-                        background_color: background_color(index as u32, selected_word),
+                        background_color: match index % 2 { 0 => "lists-second-colors", _ => "" },
                     }
                 }
             },
@@ -124,18 +122,5 @@ pub(crate) fn Words(
                 {words_to_show}
             }
         }
-    }
-}
-
-fn background_color(
-    index: u32,
-    selected_word: Signal<Option<u32>>,
-) -> &'static str {
-    if selected_word() == Some(index) {
-        return bg_gray_400;
-    }
-    match index % 2 {
-        0 => bg_gray_200,
-        _ => "",
     }
 }
