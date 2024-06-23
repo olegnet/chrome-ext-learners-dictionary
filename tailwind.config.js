@@ -2,8 +2,9 @@
 module.exports = {
     mode: "all",
     content: [
-        "./src/**/*.{html,rs}",
-        "./*.{html,js,css}"
+        "./**/*.{html,js,css}",
+        "./src/**/*.{rs,html,css}",
+        "./pkg/**/*.{html,js,css}"
     ],
     theme: {},
     variants: {},

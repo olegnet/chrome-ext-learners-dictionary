@@ -24,12 +24,14 @@
    cargo make build
    ```
 
-4. Build style.css
+4. Build css
 
    ```bash
    npm install -D tailwindcss
    npm install daisyui
    cargo make tailwindcss_debug
+   # or
+   cargo make tailwindcss
    ```
    
    See also: [How to generate all classes in Tailwind CSS](https://design2tailwind.com/blog/tailwindcss-generate-all-classes/)
