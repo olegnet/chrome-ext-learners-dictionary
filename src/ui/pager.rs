@@ -17,8 +17,6 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 
-use crate::model::sort_directions;
-
 #[component]
 pub(crate) fn Pager(
     page_length: Signal<Option<u32>>,
@@ -26,46 +24,110 @@ pub(crate) fn Pager(
     direction: Signal<String>,
     count: u32,
 ) -> Element {
-    let sort_directions_rendered = sort_directions.iter().map(|(dir, _)| {
-        rsx! {
-            option { value: "{dir}",
-                "{dir}"
-            }
-        }
-    });
-
-    rsx! {
-        div {
-            form { action: "",
-                onsubmit: move |event| event.stop_propagation(),
-                select { name: "order",
-                    id: "order",
-                    onchange: move |event| direction.set(event.value()),
-                    {sort_directions_rendered}
+    let pager = match page_length() {
+        Some(length) => {
+            let page_number = offset().unwrap_or(0) / length + 1;
+            let total_pages = (count + length - 1) / length;
+            let last_page_offset = (total_pages - 1) * length;
+            rsx! {
+                div { class: class!(flex_none self_center w_5),
+                    label { title: "First page",
+                        a { href: "#",
+                            onclick: move |_| offset.set(None),
+                            "\u{21E4}"
+                        }
+                    }
                 }
-                if page_length() != None {
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: "<<",
+                div { class: class!(flex_none self_center w_5),
+                    label { title: "Page left",
                         a { href: "#",
                             onclick: move |_| page_left(page_length, offset),
-                            "<<"
+                            "\u{2190}"
                         }
                     }
-                    label { class: class!(text_green_500),
-                        margin_left: "5px",
-                        title: ">>",
+                }
+                div { class: class!(flex_none self_center),
+                    label { title: "Page number",
+                        "{page_number}"
+                    }
+                }
+                div { class: class!(flex_none self_center),
+                    "/"
+                }
+                div { class: class!(flex_none self_center),
+                    label { title: "Total pages",
+                        "{total_pages}"
+                    }
+                }
+                div { class: class!(flex_none self_center w_5),
+                    label { title: "Page right",
                         a { href: "#",
                             onclick: move |_| page_right(count, page_length, offset),
-                            ">>"
+                            "\u{2192}"
                         }
                     }
                 }
-                label {
-                    margin_left: "10px",
-                    title: "count",
+                div { class: class!(flex_none self_center w_5),
+                    label { title: "Last page",
+                        a { href: "#",
+                            onclick: move |_| offset.set(Some(last_page_offset)),
+                            "\u{21E5}"
+                        }
+                    }
+                }
+                // div { class: class!(flex_none self_center),
+                //     label { title: "Offset",
+                //         "{offset().unwrap_or(1)}"
+                //     }
+                // }
+                // div { class: class!(flex_none self_center),
+                //     "/"
+                // }
+            }
+        },
+        None => None,
+    };
+
+    rsx! {
+        div { class: class!(flex flex_row gap_2 items_baseline),
+            div { class: class!(flex_none self_center w_5),
+                SortElement {
+                    title: "Sort order: ascending",
+                    element: "\u{2191}",
+                    direction: direction,
+                }
+            }
+            div { class: class!(flex_none self_center w_5),
+                SortElement {
+                    title: "Sort order: descending",
+                    element: "\u{2193}",
+                    direction: direction,
+                }
+            }
+            {pager}
+            div { class: class!(flex_none self_center),
+                label { title: "Count",
                     "{count}"
                 }
+            }
+        }
+    }
+}
+
+#[component]
+fn SortElement(
+    title: &'static str,
+    element: &'static str,
+    direction: Signal<String>,
+) -> Element {
+    let cls = if direction().as_str() == element { invert } else { "" };
+
+    rsx! {
+        label { title: "{title}",
+            a { class: class!(cls),
+                href: "#",
+                onclick: move |_| direction.set(element.to_string()),
+                "{element}"
             }
         }
     }

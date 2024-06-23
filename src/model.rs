@@ -75,7 +75,7 @@ pub struct FolderKey {
 }
 
 pub const sort_directions: [(&'static str, Direction); 2] =
-    [("ascending", Next), ("descending", Prev)];
+    [("\u{2191}", Next), ("\u{2193}", Prev)];
 
 lazy_static! {
     pub static ref default_sort_direction: &'static str = sort_directions.get(0).unwrap().0;
