@@ -39,7 +39,7 @@ pub(crate) fn Folders(
     show_add_folder_form: Signal<u8>,
     words_page_offset: Signal<Option<u32>>,
 ) -> Element {
-    debug!("Folders: {} {}", refresh_folders.peek(), show_add_folder_form.peek());
+    // debug!("Folders: {} {}", refresh_folders.peek(), show_add_folder_form.peek());
 
     let folders = use_resource(move || async move {
         let _ = refresh_folders();
@@ -50,7 +50,7 @@ pub(crate) fn Folders(
 
     let (folders_to_show, count) = match &*folders.read_unchecked() {
         None => {
-            debug!("None");
+            // debug!("None");
             (None, 0u32)
         }
         Some(Err(err)) => {

@@ -73,7 +73,7 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
         }
     }
 
-    debug!("tab is loaded: word={} class={} phonetics={} url={}", word, word_class, phonetics, url);
+    // debug!("tab is loaded: word={} class={} phonetics={} url={}", word, word_class, phonetics, url);
 
     match Runtime::current() {
         None => debug!("Runtime::current() is None"),

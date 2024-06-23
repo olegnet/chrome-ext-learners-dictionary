@@ -41,7 +41,7 @@ pub(crate) fn Words(
     refresh_words: Signal<u8>,
     show_add_word_form: Signal<u8>,
 ) -> Element {
-    debug!("Words: {}", refresh_words.peek());
+    // debug!("Words: {}", refresh_words.peek());
 
     let search_str = use_signal(|| String::new());
     let selected_word = use_signal(|| None::<u32>);
@@ -56,7 +56,7 @@ pub(crate) fn Words(
 
     let (words_to_show, count) = match &*words.read_unchecked() {
         None => {
-            debug!("None");
+            // debug!("None");
             (None, 0u32)
         }
         Some(Err(err)) => {
