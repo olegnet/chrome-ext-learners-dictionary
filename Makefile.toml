@@ -20,7 +20,7 @@ dependencies = ["build_wasm_pack"]  # TODO add "tailwindcss"
 
 [tasks.tailwindcss]
 command = "npx"
-args = ["tailwindcss", "-c", "tailwind.config.js", "-o", "pkg/style.css"]
+args = ["tailwindcss", "-c", "tailwind.config.js", "-o", "pkg/style.css", "-m"]
 
 [tasks.tailwindcss_debug]
 command = "npx"
