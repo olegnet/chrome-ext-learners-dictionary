@@ -22,8 +22,6 @@ use dioxus_daisyui::prelude::*;
 use crate::ui::navigation::{DataProtection, Navigation};
 use crate::ui::page_length::PageLength;
 
-// FIXME add copyrights and fonts creds here
-
 #[component]
 pub(crate) fn Settings(
     folders_page_length: Signal<Option<u32>>,

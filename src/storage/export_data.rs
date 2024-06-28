@@ -40,7 +40,7 @@ impl Storage {
             .into_iter()
             .map(|value| {
                 serde_wasm_bindgen::from_value::<T>(value.1)
-                    .unwrap() // FIXME
+                    .unwrap()
                     .set_id(None)
             })
             .collect();

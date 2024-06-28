@@ -38,7 +38,7 @@ impl Storage {
             .await?
             .into_iter()
             .map(|value| {
-                serde_wasm_bindgen::from_value(value.1).unwrap() // FIXME
+                serde_wasm_bindgen::from_value(value.1).unwrap()
             })
             .collect();
 

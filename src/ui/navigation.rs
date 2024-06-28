@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-use std::fmt::{Display, Formatter};
-
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_free_icons::Icon;
@@ -43,29 +41,6 @@ pub(crate) enum Navigation {
     Settings,
     ExportData,
     ImportData,
-}
-
-impl Display for Navigation {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        // FIXME replace ":?"
-        write!(f, "{:?}", self)
-    }
-}
-
-impl From<String> for Navigation {
-    fn from(str: String) -> Self {
-        if Navigation::Folders.to_string() == str {
-            Navigation::Folders
-        } else if Navigation::Words.to_string() == str {
-            Navigation::Words
-        } else if Navigation::Settings.to_string() == str {
-            Navigation::Settings
-        } else if Navigation::ExportData.to_string() == str {
-            Navigation::ExportData
-        } else {
-            Navigation::ImportData
-        }
-    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -124,7 +99,6 @@ pub fn Navigation() -> Element {
         async move {
             while let Some(word_key) = rx.next().await {
                 match data_protection() {
-                    // FIXME Find a better place for the messages
                     DataProtection::Protected => data_protection_error(),
                     DataProtection::Unprotected => {
                         let _ = get_storage().delete_by_id::<Word>(word_key.id).await;

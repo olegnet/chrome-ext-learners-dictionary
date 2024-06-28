@@ -19,8 +19,6 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 
-// FIXME text overlaps on a small screen
-
 #[component]
 pub fn ShowCopyright() -> Element {
     rsx! {
@@ -33,6 +31,13 @@ pub fn ShowCopyright() -> Element {
                 href: "https://github.com/olegnet/chrome-ext-learners-dictionary",
                 target: "_blank",
                 "github.com/olegnet/chrome-ext-learners-dictionary"
+            }
+            hr { margin_top: "10px" }
+            p { "All icons is from dioxus-free-icons project" }
+            a { class: class!(text_sm),
+                href: "https://github.com/dioxus-community/dioxus-free-icons",
+                target: "_blank",
+                "github.com/dioxus-community/dioxus-free-icons"
             }
         }
     }

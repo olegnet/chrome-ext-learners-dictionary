@@ -34,7 +34,7 @@ pub(crate) fn ExportData() -> Element {
     });
 
     match &*export_data.read_unchecked() {
-        None => None,   // FIXME add some placeholder message
+        None => None,   // TODO add some placeholder message
         Some(Ok(data)) => {
             rsx! {
                 StartDownload {
