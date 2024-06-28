@@ -13,7 +13,7 @@ args = ["build", "--target", "web", "--release"]
 [tasks.copy]
 command = "cp"
 args = ["-v", "background.js", "content-script.js", "manifest.json", "sidepanel.css", "sidepanel.html",
-    "sidepanel.js", "pkg/"]
+    "sidepanel.js", "icon.png", "pkg/"]
 dependencies = ["build_wasm_pack"]  # TODO add "tailwindcss"
 
 # Build css

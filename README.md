@@ -66,3 +66,10 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+## Icon
+
+    An emoji called "bookmark tabs" has been used for the app's icon and 
+    it is licensed under the open source Apache 2.0 license.
+    
+    https://iconduck.com/emojis/37470/bookmark-tabs

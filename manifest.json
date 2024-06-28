@@ -1,11 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Learners dictionary bookmarks",
+  "name": "Learner's dictionaries bookmarks",
   "version": "1.0",
   "description": "Private bookmarks for some good dictionaries",
   "minimum_chrome_version": "109",
   "author": "olegnet@gmail.com",
   "offline_enabled": true,
+  "icons": {
+    "128": "icon.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
