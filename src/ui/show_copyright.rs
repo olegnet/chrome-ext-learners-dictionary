@@ -27,14 +27,14 @@ pub fn ShowCopyright() -> Element {
             bottom: "0",
             margin_bottom: "15px",
             p { "Copyright (c) 2024 Oleg Okhotnikov" }
-            a { class: class!(text_sm),
+            a { class: class!(text_sm link link_primary),
                 href: "https://github.com/olegnet/chrome-ext-learners-dictionary",
                 target: "_blank",
                 "github.com/olegnet/chrome-ext-learners-dictionary"
             }
             hr { margin_top: "10px" }
-            p { "All icons is from dioxus-free-icons project" }
-            a { class: class!(text_sm),
+            p { "All icons are from dioxus-free-icons project" }
+            a { class: class!(text_sm link link_primary),
                 href: "https://github.com/dioxus-community/dioxus-free-icons",
                 target: "_blank",
                 "github.com/dioxus-community/dioxus-free-icons"

@@ -1,4 +1,4 @@
-### This is an extension for Google Chrome
+### This is an extension for Google Chrome to manage bookmarks for learner's dictionaries
 
    The extension is in the early stage of development. Use it at your own risk.
 
