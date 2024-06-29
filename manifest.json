@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Private bookmarks for some good dictionaries",
   "minimum_chrome_version": "109",
-  "author": "olegnet@gmail.com",
+  "author": "dict.chext@gmail.com",
   "offline_enabled": true,
   "icons": {
     "128": "icon.png"

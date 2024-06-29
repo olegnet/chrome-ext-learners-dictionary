@@ -1,7 +1,7 @@
 [package]
 name = "dictionary"
 version = "0.1.0"
-authors = ["Oleg Okhotnikov <olegnet@gmail.com>"]
+authors = ["Oleg Okhotnikov <dict.chext@gmail.com>"]
 edition = "2021"
 publish = false
 
@@ -69,7 +69,7 @@ features = [
 web_sys_unstable_apis=[]
 default = [
     "console_error_panic_hook",
-    "console_log",                  # TODO switch it off for release builds
+#    "console_log",
 ]
 
 [dev-dependencies]
@@ -81,15 +81,15 @@ wasm-bindgen-test = "0.3.42"
 # https://rustwasm.github.io/docs/book/reference/debugging.html
 # https://dioxuslabs.com/learn/0.5/cookbook/optimizing
 [profile.release]
-debug = true
-#opt-level = "z"
-#debug = false
-#lto = true
-#codegen-units = 1
-#panic = "abort"
-#strip = true
-#incremental = false
+#debug = true
+opt-level = "z"
+debug = false
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+incremental = false
 
 # TODO https://rustwasm.github.io/wasm-pack/book/cargo-toml-configuration.html
-[package.metadata.wasm-pack.profile.release]
-wasm-opt = false
+#[package.metadata.wasm-pack.profile.release]
+#wasm-opt = false
