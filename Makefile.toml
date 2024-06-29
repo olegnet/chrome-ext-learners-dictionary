@@ -32,6 +32,12 @@ args = ["tailwindcss", "-c", "tailwind.debug.js", "-o", "pkg/style.css"]
 command = "wasm-pack"
 args = ["test", "--chrome", "--headless", "--chromedriver", "${CHROMEDRIVER_PATH}"]
 
+# Publish
+
+[tasks.pre_publish]
+command = "rm"
+args = ["-f", "pkg/README.md"]
+
 # Clean
 
 [tasks.clean]
