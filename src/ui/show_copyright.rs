@@ -22,19 +22,26 @@ use dioxus_daisyui::prelude::*;
 #[component]
 pub fn ShowCopyright() -> Element {
     rsx! {
-        div { class: class!(text_base),
+        div { class: class!(text_sm),
             position: "absolute",
             bottom: "0",
             margin_bottom: "15px",
             p { "Copyright (c) 2024 Oleg Okhotnikov" }
-            a { class: class!(text_sm link link_primary),
+            a { class: class!(text_xs link link_primary),
                 href: "https://github.com/olegnet/chrome-ext-learners-dictionary",
                 target: "_blank",
                 "github.com/olegnet/chrome-ext-learners-dictionary"
             }
             hr { margin_top: "10px" }
-            p { "All icons are from dioxus-free-icons project" }
-            a { class: class!(text_sm link link_primary),
+            p { "An emoji called 'bookmark tabs' has been used for the app's icon" }
+            a { class: class!(text_xs link link_primary),
+                href: "https://iconduck.com/emojis/37470/bookmark-tabs",
+                target: "_blank",
+                "iconduck.com/emojis/37470/bookmark-tabs"
+            }
+            hr { margin_top: "10px" }
+            p { "All other icons are from dioxus-free-icons project" }
+            a { class: class!(text_xs link link_primary),
                 href: "https://github.com/dioxus-community/dioxus-free-icons",
                 target: "_blank",
                 "github.com/dioxus-community/dioxus-free-icons"
