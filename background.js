@@ -3,7 +3,8 @@ const SIDEPANEL = 'sidepanel.html';
 
 chrome.sidePanel
     .setPanelBehavior({openPanelOnActionClick: true})
-    .catch((error) => console.error(error));
+    // .catch((error) => console.error(error));
+    .catch((error) => {});
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     if (!tab.url) return;

@@ -20,7 +20,6 @@ use log::debug;
 use wasm_bindgen::prelude::*;
 
 use crate::storage_global::init_storage;
-use crate::storage_props::log_storage_properties;
 use crate::ui::App;
 
 mod model;
@@ -36,7 +35,7 @@ cfg_if! {
         }
     } else {
         fn init_log() {
-            web_sys::console::log_1(&"Logger is switched off".into());
+            // web_sys::console::log_1(&"Logger is switched off".into());
         }
     }
 }
@@ -50,7 +49,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     init_storage().await;
 
-    log_storage_properties().await?;
+    // log_storage_properties().await?;
 
     launch_web(App);
 
