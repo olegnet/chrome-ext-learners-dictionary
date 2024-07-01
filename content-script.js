@@ -28,12 +28,12 @@ window.addEventListener("load",
                         .textContent;
                 }
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
             try {
                 title = window.document.head.getElementsByTagName("title")[0].textContent;
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
             await chrome.runtime.sendMessage({
                 from_content_script: "loaded",

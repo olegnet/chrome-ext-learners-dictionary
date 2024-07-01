@@ -18,6 +18,7 @@ use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{console, window};
 
+#[allow(dead_code)] // FIXME
 pub async fn log_storage_properties() -> Result<JsValue, JsValue> {
     let promise = window()
         .expect("No window!")
