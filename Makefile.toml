@@ -36,7 +36,7 @@ args = ["test", "--chrome", "--headless", "--chromedriver", "${CHROMEDRIVER_PATH
 
 [tasks.pre_publish]
 command = "rm"
-args = ["-f", "pkg/README.md"]
+args = ["-f", "pkg/README.md", "pkg/package.json", "pkg/dictionary_bg.wasm.d.ts", "pkg/dictionary.d.ts"]
 
 # Clean
 
