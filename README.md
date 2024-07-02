@@ -2,6 +2,14 @@
 
    The extension is in the early stage of development. Use it at your own risk.
 
+### Try
+
+   [In Chrome Web Store](https://chromewebstore.google.com/detail/learners-dictionaries-boo/ooidbplkdacjmpkmjpnmmlonafoppjpo)
+
+1. Create a new folder and open it.
+2. Search for words and add them to your bookmarks.
+3. Click on the "gear wheel" icon and adjust the page size for the words.
+
 ### Build
 
 1. Install [Rust](https://www.rust-lang.org/install.html)
