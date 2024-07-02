@@ -13,7 +13,10 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Click to open bookmarks panel"
+    "default_title": "Click to open bookmarks panel",
+    "default_icon": {
+      "128": "icon.png"
+    }
   },
   "permissions": [
     "sidePanel",
