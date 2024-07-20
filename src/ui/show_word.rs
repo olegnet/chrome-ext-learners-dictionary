@@ -22,14 +22,24 @@ use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fi_icons::{FiSearch, FiTrash};
 
 use crate::model::{Word, WordKey};
-use crate::ui::{dictionaryLookup, openUrl};
+use crate::ui::{SELECTED_WORD_INDEX, dictionaryLookup, openUrl};
 
 #[component]
 pub(crate) fn ShowWord(
+    index: i32,
     word: ReadOnlySignal<Word>,
-    background_color: &'static str,
 ) -> Element {
     let word_key = use_coroutine_handle::<WordKey>();
+
+    let selected_word_index = use_memo(move || SELECTED_WORD_INDEX());
+    let is_selected = match selected_word_index() {
+        None => false,
+        Some(v) => index == v
+    };
+
+    if is_selected {
+        spawn(openUrl(word().url.clone()));
+    }
 
     let id = word().id.unwrap();
     let word_str = word().word;
@@ -37,8 +47,11 @@ pub(crate) fn ShowWord(
     let note = word().note;
     let url = word().url;
 
+    let background_color = match index % 2 { 0 => "lists-second-colors", _ => "" };
+    let selected_word = if is_selected { outline } else { "" };
+
     rsx! {
-        div { class: class!(flex items_baseline background_color),
+        div { class: class!(flex items_baseline background_color selected_word),
             div { class: class!(flex_none),
                 a {
                     href: "#",
@@ -69,7 +82,7 @@ pub(crate) fn ShowWord(
                 a { class: class!(inline_block),
                     margin_right: "5px",
                     href: "#",
-                    onclick: move |_| { word_key.send(WordKey{ id });  },
+                    onclick: move |_| { word_key.send(WordKey{ id }); },
                     Icon {
                         height: 15,
                         width: 15,

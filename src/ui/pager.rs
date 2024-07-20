@@ -16,6 +16,8 @@
 
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
+use log::debug;
+use crate::ui::{MAX_WORD_INDEX, SELECTED_WORD_INDEX};
 
 #[component]
 pub(crate) fn Pager(
@@ -24,6 +26,21 @@ pub(crate) fn Pager(
     direction: Signal<String>,
     count: u32,
 ) -> Element {
+    if let Some(v) = SELECTED_WORD_INDEX() {
+        if v < 0 {
+            page_left(page_length, offset);
+        } else if v >= MAX_WORD_INDEX() {
+            page_right(count, page_length, offset);
+        }
+    }
+
+    let selected_word_index_adj = use_memo(move || {
+        match SELECTED_WORD_INDEX() {
+            None => String::new(),
+            Some(v) => format!("({})", v + 1)
+        }
+    });
+
     let pager = match page_length() {
         Some(length) => {
             let page_number = offset().unwrap_or(0) / length + 1;
@@ -110,6 +127,11 @@ pub(crate) fn Pager(
                     "{count}"
                 }
             }
+            div { class: class!(flex_none self_center),
+                label { title: "Selected",
+                    "{selected_word_index_adj}"
+                }
+            }
         }
     }
 }
@@ -135,20 +157,50 @@ fn SortElement(
 
 fn page_left(page_length: Signal<Option<u32>>, mut offset: Signal<Option<u32>>) {
     if page_length() == None {
+        set_index_to_zero();
         return;
     }
     let new_off = (offset().unwrap_or(0) as i32) - (page_length().unwrap() as i32);
     if new_off >= 0 {
         offset.set(Some(new_off as u32));
+        set_index_to_max();
+    } else {
+        set_index_to_zero();
     }
 }
 
 fn page_right(count: u32, page_length: Signal<Option<u32>>, mut offset: Signal<Option<u32>>) {
     if page_length() == None {
+        set_index_to_one_step_back();
         return;
     }
     let new_off = offset().unwrap_or(0) + page_length().unwrap();
     if new_off < count {
         offset.set(Some(new_off));
+        set_index_to_zero();
+    } else {
+        set_index_to_one_step_back();
     }
+}
+
+fn set_index_to_zero() {
+    if let Some(_) = SELECTED_WORD_INDEX() {
+        *SELECTED_WORD_INDEX.write() = Some(0)
+    }
+}
+
+// TODO wrong position when return back from the latest page
+fn set_index_to_max() {
+    if let Some(_) = SELECTED_WORD_INDEX() {
+        *SELECTED_WORD_INDEX.write() = Some(MAX_WORD_INDEX() - 1);
+    }
+}
+
+fn set_index_to_one_step_back() {
+    SELECTED_WORD_INDEX.with_mut(move |v| {
+        match *v {
+            Some(x) => *v = Some(x - 1),
+            None => {}
+        }
+    });
 }

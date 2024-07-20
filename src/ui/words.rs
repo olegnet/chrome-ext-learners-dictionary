@@ -22,6 +22,7 @@ use log::debug;
 
 use crate::storage_global::get_storage;
 use crate::ui::add_word_form::AddWordForm;
+use crate::ui::MAX_WORD_INDEX;
 use crate::ui::error_message::ErrorMessage;
 use crate::ui::pager::Pager;
 use crate::ui::search_form::SearchForm;
@@ -68,17 +69,20 @@ pub(crate) fn Words(
                 0u32,
             )
         }
-        Some(Ok(result)) => (
-            rsx! {
-                for (index, word) in result.words.iter().enumerate() {
-                    ShowWord {
-                        word: word.to_owned(),
-                        background_color: match index % 2 { 0 => "lists-second-colors", _ => "" },
+        Some(Ok(result)) => {
+            *MAX_WORD_INDEX.write() = result.words.len() as i32;
+            (
+                rsx! {
+                    for (index, word) in result.words.iter().enumerate() {
+                        ShowWord {
+                            index: index as i32,
+                            word: word.to_owned(),
+                        }
                     }
-                }
-            },
-            result.count,
-        ),
+                },
+                result.count
+            )
+        },
     };
 
     rsx! {

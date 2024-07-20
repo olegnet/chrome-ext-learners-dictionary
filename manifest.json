@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Learner's dictionaries bookmarks",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Private bookmarks for some good dictionaries",
   "minimum_chrome_version": "126",
   "author": "dict.chext@gmail.com",
@@ -28,6 +28,14 @@
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
   },
   "commands": {
+    "previous_item": {
+      "suggested_key": {"default": "Ctrl+Up", "mac": "Command+Up"},
+      "description": "Select the previous word in the list."
+    },
+    "next_item": {
+      "suggested_key": {"default": "Ctrl+Down", "mac": "Command+Down"},
+      "description": "Select the next word in the list."
+    },
     "_execute_action": {
       "suggested_key": {
         "default": "Ctrl+B",

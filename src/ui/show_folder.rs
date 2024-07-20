@@ -23,6 +23,7 @@ use dioxus_free_icons::icons::fi_icons::FiTrash;
 
 use crate::model::{Folder, FolderKey};
 use crate::ui::navigation::Navigation;
+use crate::ui::SELECTED_WORD_INDEX;
 
 #[component]
 pub(crate) fn ShowFolder(
@@ -47,6 +48,7 @@ pub(crate) fn ShowFolder(
                     onclick: move |_| {
                         if selected_folder_str() != folder_str {
                             words_page_offset.set(None);
+                            *SELECTED_WORD_INDEX.write() = None;
                         }
                         selected_folder_str.set(folder_str.to_owned());
                         navigation.send(Navigation::Words);
