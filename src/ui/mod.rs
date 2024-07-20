@@ -21,7 +21,6 @@ use dioxus::prelude::*;
 use log::debug;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsValue;
-
 use crate::ui::navigation::Navigation;
 
 mod add_folder_form;
@@ -60,6 +59,9 @@ const EXPORT_FILE_TYPE: &str = "application/json";
 
 static CURRENT_TAB_DATA: GlobalSignal<CurrentTabData> = Signal::global(|| CurrentTabData::default());
 
+static SELECTED_WORD_INDEX: GlobalSignal<Option<i32>> = Signal::global(|| None);
+static MAX_WORD_INDEX: GlobalSignal<i32> = Signal::global(|| 0);
+
 #[wasm_bindgen]
 pub fn on_tab_loaded(url: String, word: String, word_class: String, title: String, phonetics: String) {
     let mut word = word;
@@ -81,6 +83,32 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
             CURRENT_TAB_DATA.with_mut(move |v|
                 *v = CurrentTabData { url, word, word_class, phonetics }
             );
+        })
+    }
+}
+
+#[wasm_bindgen]
+pub fn on_keyboard_command(command: String) {
+    // debug!("on_keyboard_command: {}", command);
+
+    match Runtime::current() {
+        None => debug!("Runtime::current() is None"),
+        Some(_) => ScopeId::ROOT.in_runtime(|| {
+            match command.as_str() {
+                "previous_item" => SELECTED_WORD_INDEX.with_mut(move |v| {
+                    match *v {
+                        Some(x) => *v = Some(x - 1),
+                        None => *v = Some(0)
+                    }
+                }),
+                "next_item" => SELECTED_WORD_INDEX.with_mut(move |v|
+                    match *v {
+                        Some(x) => *v = Some(x + 1),
+                        None => *v = Some(0)
+                    }
+                ),
+                _ => debug!("on_keyboard_command: unknown command: {}", command)
+            }
         })
     }
 }

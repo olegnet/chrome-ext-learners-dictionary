@@ -1,4 +1,4 @@
-import init, {on_tab_loaded} from './dictionary.js'
+import init, {on_tab_loaded, on_keyboard_command} from './dictionary.js'
 
 init("./dictionary_bg.wasm");
 
@@ -12,4 +12,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             request.from_content_script_phonetics.trim()
         );
     }
+});
+
+chrome.commands.onCommand.addListener((command) => {
+    // console.log(`Command: ${command}`);
+    on_keyboard_command(command);
 });

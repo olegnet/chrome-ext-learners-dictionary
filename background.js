@@ -1,10 +1,10 @@
 const SITE_ORIGIN = 'https://www.oxfordlearnersdictionaries.com';
 const SIDEPANEL = 'sidepanel.html';
 
-chrome.sidePanel
-    .setPanelBehavior({openPanelOnActionClick: true})
-    // .catch((error) => console.error(error));
-    .catch((error) => {});
+chrome.sidePanel.setPanelBehavior({openPanelOnActionClick: true})
+    .catch((error) => {
+        // console.error(error);
+    });
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     if (!tab.url) return;
@@ -20,6 +20,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
             tabId, enabled: false
         });
     }
+});
+
+chrome.commands.onCommand.addListener((command) => {
+    // console.log(`Command: ${command}`);
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
