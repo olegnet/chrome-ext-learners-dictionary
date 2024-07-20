@@ -23,7 +23,7 @@ use log::debug;
 use crate::storage_global::get_storage;
 use crate::ui::add_folder_form::AddFolderForm;
 use crate::ui::error_message::ErrorMessage;
-use crate::ui::pager::Pager;
+use crate::ui::pager::{Pager, PagerMode};
 use crate::ui::show_folder::ShowFolder;
 
 #[component]
@@ -68,10 +68,10 @@ pub(crate) fn Folders(
             rsx! {
                 for (index, folder) in result.folders.iter().enumerate() {
                     ShowFolder {
+                        index: index as i32,
                         folder: folder.to_owned(),
-                        selected_folder_str: selected_folder_str,
-                        words_page_offset: words_page_offset,
-                        background_color: match index % 2 { 0 => "lists-second-colors", _ => "" },
+                        selected_folder_str,
+                        words_page_offset,
                     }
                 }
             },
@@ -94,6 +94,7 @@ pub(crate) fn Folders(
                 "{refresh_folders}"
             }
             Pager {
+                mode: PagerMode::Folders,
                 page_length: page_length,
                 offset: offset,
                 direction: direction,

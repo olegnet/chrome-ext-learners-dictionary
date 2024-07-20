@@ -27,10 +27,10 @@ use crate::ui::SELECTED_WORD_INDEX;
 
 #[component]
 pub(crate) fn ShowFolder(
+    index: i32,
     folder: ReadOnlySignal<Folder>,
     selected_folder_str: Signal<String>,
     words_page_offset: Signal<Option<u32>>,
-    background_color: &'static str,
 ) -> Element {
     let navigation = use_coroutine_handle::<Navigation>();
     let folder_key = use_coroutine_handle::<FolderKey>();
@@ -38,6 +38,8 @@ pub(crate) fn ShowFolder(
     let id = folder().id.unwrap();
     let folder_str = folder().folder;
     let folder_note_str = folder().folder_note;
+
+    let background_color = match index % 2 { 0 => "lists-second-colors", _ => "" };
 
     rsx! {
         div { class: class!(flex items_baseline background_color),
