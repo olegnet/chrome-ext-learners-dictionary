@@ -48,14 +48,22 @@ pub(crate) fn ShowWord(
     let url = word().url;
 
     let background_color = match index % 2 { 0 => "lists-second-colors", _ => "" };
-    let selected_word = if is_selected { outline } else { "" };
+    let selected_word = if is_selected { "lists-selected-colors" } else { "" };
 
     rsx! {
         div { class: class!(flex items_baseline background_color selected_word),
+            onclick: move |_| {
+                if let Some(_) = SELECTED_WORD_INDEX() {
+                    *SELECTED_WORD_INDEX.write() = Some(index);
+                }
+            },
             div { class: class!(flex_none),
                 a {
                     href: "#",
-                    onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
+                    onclick: move |event| {
+                        event.stop_propagation();
+                        spawn(dictionaryLookup(word_str.clone()));
+                    },
                     Icon {
                         height: 15,
                         width: 15,
@@ -82,7 +90,10 @@ pub(crate) fn ShowWord(
                 a { class: class!(inline_block),
                     margin_right: "5px",
                     href: "#",
-                    onclick: move |_| { word_key.send(WordKey{ id }); },
+                    onclick: move |event| {
+                        event.stop_propagation();
+                        word_key.send(WordKey{ id });
+                    },
                     Icon {
                         height: 15,
                         width: 15,

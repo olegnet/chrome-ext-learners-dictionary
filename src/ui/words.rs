@@ -24,7 +24,7 @@ use crate::storage_global::get_storage;
 use crate::ui::add_word_form::AddWordForm;
 use crate::ui::MAX_WORD_INDEX;
 use crate::ui::error_message::ErrorMessage;
-use crate::ui::pager::Pager;
+use crate::ui::pager::{Pager, PagerMode};
 use crate::ui::search_form::SearchForm;
 use crate::ui::show_word::ShowWord;
 
@@ -117,6 +117,7 @@ pub(crate) fn Words(
                 "{refresh_words}"
             }
             Pager {
+                mode: PagerMode::Words,
                 page_length: page_length,
                 offset: offset,
                 direction: direction,
