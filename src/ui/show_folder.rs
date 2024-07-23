@@ -39,7 +39,7 @@ pub(crate) fn ShowFolder(
     let folder_str = folder().folder;
     let folder_note_str = folder().folder_note;
 
-    let background_color = match index % 2 { 0 => "lists-second-colors", _ => "" };
+    let background_color = if let 0 = index % 2 { "lists-second-style" } else { "" };
 
     rsx! {
         div { class: class!(flex items_baseline background_color),

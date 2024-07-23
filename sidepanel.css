@@ -7,21 +7,22 @@
 }
 
 @media (prefers-color-scheme: light) {
-    .lists-second-colors {
+    .lists-second-style {
         background-color: #E5E7EB;
     }
-    .lists-selected-colors {
-        background-color: rgba(244, 62, 62, 0.7);
+    .lists-selected-style {
+        outline-style: solid;
     }
 }
 
 @media (prefers-color-scheme: dark) {
-    .lists-second-colors {
+    .lists-second-style {
         color: black;
-        background-color: #9EA6B4;
+        background-color: #7c818d;
     }
-    .lists-selected-colors {
+    .lists-selected-style {
         color: black;
-        background-color: rgba(244, 62, 62, 0.55);
+        background-color: rgba(255, 121, 121, 0.55);
+        outline-style: solid;
     }
 }
