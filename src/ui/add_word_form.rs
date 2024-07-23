@@ -101,8 +101,7 @@ pub(crate) fn AddWordForm(
                     p { class: class!(text_sm),
                         "URL to add:"
                     }
-                    a { class: class!(text_xs text_blue_600 font_bold font_mono),
-                        href: "#",
+                    button { class: class!(text_xs text_blue_600 font_bold font_mono),
                         onclick: move |_| open_url.send(current_tab_data().url),
                         "{show_url}"
                     }

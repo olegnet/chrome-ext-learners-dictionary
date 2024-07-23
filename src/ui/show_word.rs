@@ -52,18 +52,15 @@ pub(crate) fn ShowWord(
 
     rsx! {
         div { class: class!(flex items_baseline background_color selected_word),
+            id: "{id}",
             onclick: move |_| {
                 if let Some(_) = SELECTED_WORD_INDEX() {
                     *SELECTED_WORD_INDEX.write() = Some(index);
                 }
             },
             div { class: class!(flex_none),
-                a {
-                    href: "#",
-                    onclick: move |event| {
-                        event.stop_propagation();
-                        spawn(dictionaryLookup(word_str.clone()));
-                    },
+                button {
+                    onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
                     Icon {
                         height: 15,
                         width: 15,
@@ -73,8 +70,7 @@ pub(crate) fn ShowWord(
             }
             div { class: class!(flex_1),
                 margin_left: "10px",
-                a { class: class!(inline_block underline),
-                    href: "#",
+                button { class: class!(inline_block underline),
                     onclick: move |_| { spawn(openUrl(url.clone())); },
                     "{word_str}"
                 }
@@ -87,13 +83,9 @@ pub(crate) fn ShowWord(
                 "{note}"
             }
             div { class: class!(flex_none),
-                a { class: class!(inline_block),
+                button { class: class!(inline_block),
                     margin_right: "5px",
-                    href: "#",
-                    onclick: move |event| {
-                        event.stop_propagation();
-                        word_key.send(WordKey{ id });
-                    },
+                    onclick: move |_| word_key.send(WordKey{ id }),
                     Icon {
                         height: 15,
                         width: 15,

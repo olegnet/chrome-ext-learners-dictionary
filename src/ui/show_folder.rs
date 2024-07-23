@@ -43,10 +43,10 @@ pub(crate) fn ShowFolder(
 
     rsx! {
         div { class: class!(flex items_baseline background_color),
+            id: "{id}",
             div { class: class!(flex_none max_w_64),
                 margin_left: "5px",
-                a { class: class!(underline),
-                    href: "#",
+                button { class: class!(underline),
                     onclick: move |_| {
                         if selected_folder_str() != folder_str {
                             words_page_offset.set(None);
@@ -63,9 +63,8 @@ pub(crate) fn ShowFolder(
                 "{folder_note_str}"
             }
             div { class: class!(flex_none),
-                a { class: class!(inline_block),
+                button { class: class!(inline_block),
                     margin_right: "5px",
-                    href: "#",
                     onclick: move |_| folder_key.send(FolderKey{ id }),
                     Icon {
                         height: 15,
