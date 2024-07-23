@@ -50,7 +50,7 @@ pub(crate) fn Pager(
             rsx! {
                 div { class: class!(flex_none self_center w_5),
                     label { title: "First page",
-                        a { href: "#",
+                        button {
                             onclick: move |_| first_page(mode, offset),
                             "\u{21E4}"
                         }
@@ -58,7 +58,7 @@ pub(crate) fn Pager(
                 }
                 div { class: class!(flex_none self_center w_5),
                     label { title: "Page left",
-                        a { href: "#",
+                        button {
                             onclick: move |_| page_left(mode, page_length, offset),
                             "\u{2190}"
                         }
@@ -79,7 +79,7 @@ pub(crate) fn Pager(
                 }
                 div { class: class!(flex_none self_center w_5),
                     label { title: "Page right",
-                        a { href: "#",
+                        button {
                             onclick: move |_| page_right(mode, count, page_length, offset, false),
                             "\u{2192}"
                         }
@@ -87,20 +87,12 @@ pub(crate) fn Pager(
                 }
                 div { class: class!(flex_none self_center w_5),
                     label { title: "Last page",
-                        a { href: "#",
+                        button {
                             onclick: move |_| last_page(mode, offset, last_page_offset),
                             "\u{21E5}"
                         }
                     }
                 }
-                // div { class: class!(flex_none self_center),
-                //     label { title: "Offset",
-                //         "{offset().unwrap_or(1)}"
-                //     }
-                // }
-                // div { class: class!(flex_none self_center),
-                //     "/"
-                // }
             }
         }
         None => None,
@@ -145,8 +137,7 @@ fn SortElement(
 
     rsx! {
         label { title: "{title}",
-            a { class: class!(cls),
-                href: "#",
+            button { class: class!(cls),
                 onclick: move |_| {
                     direction.set(element.to_string());
                     if mode() == PagerMode::Words {
