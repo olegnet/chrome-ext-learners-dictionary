@@ -47,8 +47,8 @@ pub(crate) fn ShowWord(
     let note = word().note;
     let url = word().url;
 
-    let background_color = match index % 2 { 0 => "lists-second-colors", _ => "" };
-    let selected_word = if is_selected { "lists-selected-colors" } else { "" };
+    let background_color = if let 0 = index % 2 { "lists-second-style" } else { "" };
+    let selected_word = if is_selected { "lists-selected-style" } else { "" };
 
     rsx! {
         div { class: class!(flex items_baseline background_color selected_word),
