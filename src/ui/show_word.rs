@@ -52,12 +52,8 @@ pub(crate) fn ShowWord(
 
     rsx! {
         div { class: class!(flex items_baseline background_color selected_word),
-            id: "{id}",
-            onclick: move |_| {
-                if let Some(_) = SELECTED_WORD_INDEX() {
-                    *SELECTED_WORD_INDEX.write() = Some(index);
-                }
-            },
+            id: "word-{index}",
+            onclick: move |_| *SELECTED_WORD_INDEX.write() = Some(index),
             div { class: class!(flex_none),
                 button {
                     onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },

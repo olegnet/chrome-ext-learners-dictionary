@@ -88,3 +88,14 @@ export function startDownload(url, filename) {
         saveAs: true
     });
 }
+
+export function scrollTo(id) {
+    const container = document.getElementById("words-list");
+    const target = document.getElementById(id);
+    if (container && target) {
+        container.scrollTo({
+            top: target.offsetTop - container.offsetTop,
+            behavior: 'smooth'
+        });
+    }
+}
