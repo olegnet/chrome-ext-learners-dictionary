@@ -43,7 +43,6 @@ pub(crate) fn ShowFolder(
 
     rsx! {
         div { class: class!(flex items_baseline background_color),
-            id: "{id}",
             div { class: class!(flex_none max_w_64),
                 margin_left: "5px",
                 button { class: class!(underline),

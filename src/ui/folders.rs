@@ -100,7 +100,7 @@ pub(crate) fn Folders(
                 direction: direction,
                 count: count,
             }
-            div {
+            div { class: "main-content",
                 {folders_to_show}
             }
         }

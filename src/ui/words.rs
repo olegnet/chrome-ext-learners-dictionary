@@ -42,8 +42,6 @@ pub(crate) fn Words(
     refresh_words: Signal<u8>,
     show_add_word_form: Signal<u8>,
 ) -> Element {
-    // debug!("Words: {}", refresh_words.peek());
-
     let search_str = use_signal(|| String::new());
 
     let words = use_resource(move || async move {
@@ -123,7 +121,8 @@ pub(crate) fn Words(
                 direction: direction,
                 count: count,
             }
-            div {
+            div { class: "main-content",
+                id: "words-list",
                 {words_to_show}
             }
         }

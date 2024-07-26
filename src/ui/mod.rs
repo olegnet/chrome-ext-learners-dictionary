@@ -95,21 +95,29 @@ pub fn on_keyboard_command(command: String) {
         None => debug!("Runtime::current() is None"),
         Some(_) => ScopeId::ROOT.in_runtime(|| {
             match command.as_str() {
-                "previous_item" => SELECTED_WORD_INDEX.with_mut(move |v| {
-                    match *v {
+                "previous_item" => {
+                    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
                         Some(x) => *v = Some(x - 1),
                         None => *v = Some(0)
-                    }
-                }),
-                "next_item" => SELECTED_WORD_INDEX.with_mut(move |v|
-                    match *v {
+                    });
+                    scroll_to(SELECTED_WORD_INDEX());
+                }
+                "next_item" => {
+                    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
                         Some(x) => *v = Some(x + 1),
                         None => *v = Some(0)
-                    }
-                ),
+                    });
+                    scroll_to(SELECTED_WORD_INDEX());
+                }
                 _ => debug!("on_keyboard_command: unknown command: {}", command)
             }
         })
+    }
+}
+
+fn scroll_to(id: Option<i32>) {
+    if let Some(v) = id {
+        scrollTo(format!("word-{}", v));
     }
 }
 
@@ -119,6 +127,7 @@ extern "C" {
     pub async fn openUrl(url: String);
     pub async fn updateCurrentTabData();
     pub fn startDownload(url: String, filename: String);
+    fn scrollTo(id: String);
 }
 
 #[wasm_bindgen]
