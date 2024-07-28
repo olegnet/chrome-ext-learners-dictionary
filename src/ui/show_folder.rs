@@ -42,9 +42,10 @@ pub(crate) fn ShowFolder(
     let background_color = if let 0 = index % 2 { "lists-second-style" } else { "" };
 
     rsx! {
-        div { class: class!(flex items_baseline background_color),
-            div { class: class!(flex_none max_w_64),
-                margin_left: "5px",
+        div { class: class!(flex flex_wrap items_baseline min_h_12 background_color),
+            margin: "1px",
+            div { class: class!(flex_auto),
+                margin: "2px",
                 button { class: class!(underline),
                     onclick: move |_| {
                         if selected_folder_str() != folder_str {
@@ -57,17 +58,16 @@ pub(crate) fn ShowFolder(
                     "{folder_str}"
                 }
             }
-            div { class: class!(flex_1 text_xs),
-                margin_left: "5px",
+            div { class: class!(flex_auto text_xs),
                 "{folder_note_str}"
             }
             div { class: class!(flex_none),
+                margin: "2px",
                 button { class: class!(inline_block),
-                    margin_right: "5px",
                     onclick: move |_| folder_key.send(FolderKey{ id }),
                     Icon {
-                        height: 15,
-                        width: 15,
+                        height: 16,
+                        width: 16,
                         icon: FiTrash,
                     }
                 }

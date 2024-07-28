@@ -94,7 +94,7 @@ export function scrollTo(id) {
     const target = document.getElementById(id);
     if (container && target) {
         container.scrollTo({
-            top: target.offsetTop - container.offsetTop,
+            top: target.offsetTop - container.offsetTop - 2,
             behavior: 'smooth'
         });
     }
