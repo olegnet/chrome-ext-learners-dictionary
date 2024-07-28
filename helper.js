@@ -94,8 +94,28 @@ export function scrollTo(id) {
     const target = document.getElementById(id);
     if (container && target) {
         container.scrollTo({
-            top: target.offsetTop - container.offsetTop - 2,
+            top: target.offsetTop - container.offsetTop - 1,
             behavior: 'smooth'
         });
     }
+}
+
+export function doPlayPhonetics() {
+    try {
+        const element = window.document.getElementsByClassName("phonetics")[0]
+            .getElementsByClassName("phons_br")[0]
+            .getElementsByClassName("pron-uk")[0];
+        const mp3Url = element.getAttribute('data-src-mp3');
+        const oggUrl = element.getAttribute('data-src-ogg');
+        const audio = new Audio(mp3Url || oggUrl);
+        audio.play().catch(error => {
+            // console.error('Audio playback failed: ', error);
+        });
+    } catch (e) {
+        // console.log(e);
+    }
+}
+
+export async function playPhonetics() {
+    await executeInCurrentTab(doPlayPhonetics, []);
 }

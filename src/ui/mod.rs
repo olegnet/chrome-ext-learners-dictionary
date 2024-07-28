@@ -83,6 +83,7 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
             CURRENT_TAB_DATA.with_mut(move |v|
                 *v = CurrentTabData { url, word, word_class, phonetics }
             );
+            spawn(playPhonetics());
         })
     }
 }
@@ -126,6 +127,7 @@ extern "C" {
     pub async fn dictionaryLookup(searchText: String);
     pub async fn openUrl(url: String);
     pub async fn updateCurrentTabData();
+    async fn playPhonetics();
     pub fn startDownload(url: String, filename: String);
     fn scrollTo(id: String);
 }
