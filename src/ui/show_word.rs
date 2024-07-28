@@ -51,21 +51,23 @@ pub(crate) fn ShowWord(
     let selected_word = if is_selected { "lists-selected-style" } else { "" };
 
     rsx! {
-        div { class: class!(flex items_baseline background_color selected_word),
+        div { class: class!(flex flex_wrap items_baseline min_h_12 background_color selected_word),
             id: "word-{index}",
+            margin: "1px",
             onclick: move |_| *SELECTED_WORD_INDEX.write() = Some(index),
             div { class: class!(flex_none),
+                margin_top: "1px",
                 button {
                     onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
                     Icon {
-                        height: 15,
-                        width: 15,
+                        height: 16,
+                        width: 16,
                         icon: FiSearch,
                     }
                 }
             }
             div { class: class!(flex_1),
-                margin_left: "10px",
+                margin: "2px",
                 button { class: class!(inline_block underline),
                     onclick: move |_| { spawn(openUrl(url.clone())); },
                     "{word_str}"
@@ -75,16 +77,16 @@ pub(crate) fn ShowWord(
                 }
             }
             div { class: class!(flex_1),
-                margin_left: "5px",
+                margin: "2px",
                 "{note}"
             }
             div { class: class!(flex_none),
+                margin: "2px",
                 button { class: class!(inline_block),
-                    margin_right: "5px",
                     onclick: move |_| word_key.send(WordKey{ id }),
                     Icon {
-                        height: 15,
-                        width: 15,
+                        height: 16,
+                        width: 16,
                         icon: FiTrash,
                     }
                 }
