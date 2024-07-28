@@ -26,7 +26,7 @@ use futures_util::StreamExt;
 
 use crate::model::{default_sort_direction, Folder, FolderKey, Word, WordKey};
 use crate::storage_global::get_storage;
-use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first, updateCurrentTabData};
+use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first};
 use crate::ui::export_data::ExportData;
 use crate::ui::folders::Folders;
 use crate::ui::import_data::ImportData;
@@ -129,8 +129,6 @@ pub fn Navigation() -> Element {
     let current_tab_data = use_memo(move || CURRENT_TAB_DATA());
 
     use_effect(move || {
-        spawn(updateCurrentTabData());
-
         word_str.set(current_tab_data().word);
         word_class_str.set(current_tab_data().word_class);
         note_str.set(current_tab_data().phonetics);
