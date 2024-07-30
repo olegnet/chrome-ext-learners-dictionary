@@ -18,7 +18,8 @@
 
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
-
+use dioxus_std::storage::{LocalStorage, use_synced_storage};
+use crate::ui::{AUTOPLAY, AUTOPLAY_DEFAULT_TRUE, AUTOPLAY_FALSE};
 use crate::ui::navigation::{DataProtection, Navigation};
 use crate::ui::page_length::PageLength;
 
@@ -35,6 +36,14 @@ pub(crate) fn Settings(
     let data_protection_memo = use_memo(move || match data_protection() {
         DataProtection::Unprotected => "You can delete folders and words",
         DataProtection::Protected => "Uncheck to be able to delete folders and words",
+    });
+
+    let mut autoplay = use_synced_storage::<LocalStorage, u8>(
+        "autoplay".to_string(), || AUTOPLAY_DEFAULT_TRUE);
+
+    let autoplay_memo = use_memo(move || match autoplay() {
+        255 => "Autoplay is enabled",
+        _ => "Autoplay is disabled",
     });
 
     rsx! {
@@ -96,6 +105,33 @@ pub(crate) fn Settings(
                             },
                         }
                         " {data_protection_memo}"
+                    }
+                }
+            }
+
+            hr { margin_top: "10px" }
+            div {
+                margin_top: "10px",
+                "Autoplay"
+                div {
+                    margin_top: "5px",
+                    form {
+                        action: "",
+                        onsubmit: move |event| event.stop_propagation(),
+                        input {
+                            r#type: "checkbox",
+                            checked: autoplay() == AUTOPLAY_DEFAULT_TRUE,
+                            onchange: move |event| {
+                                AUTOPLAY.with_mut(move |v| {
+                                    match event.checked() {
+                                        true => *v = AUTOPLAY_DEFAULT_TRUE,
+                                        false => *v = AUTOPLAY_FALSE
+                                    }
+                                });
+                                autoplay.set(AUTOPLAY());
+                            },
+                        }
+                        " {autoplay_memo}"
                     }
                 }
             }
