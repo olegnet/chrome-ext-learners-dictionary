@@ -12,7 +12,9 @@ function doDictionaryLookup(searchText) {
 }
 
 function doOpenUrl(url) {
-    window.location.href = url
+    if (window.location.href !== url) {
+        window.location.href = url
+    }
 }
 
 async function executeInCurrentTab(fn, args) {
