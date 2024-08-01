@@ -83,7 +83,10 @@ pub(crate) fn ShowWord(
             div { class: class!(flex_none),
                 margin: "2px",
                 button { class: class!(inline_block),
-                    onclick: move |_| word_key.send(WordKey{ id }),
+                    onclick: move |event| {
+                        event.stop_propagation();
+                        word_key.send(WordKey{ id });
+                    },
                     Icon {
                         height: 16,
                         width: 16,
