@@ -44,17 +44,17 @@ pub(crate) fn ShowFolder(
     rsx! {
         div { class: class!(flex flex_wrap items_baseline min_h_12 background_color),
             margin: "1px",
+            onclick: move |_| {
+                if selected_folder_str() != folder_str {
+                    words_page_offset.set(None);
+                    *SELECTED_WORD_INDEX.write() = None;
+                }
+                selected_folder_str.set(folder_str.to_owned());
+                navigation.send(Navigation::Words);
+            },
             div { class: class!(flex_auto),
                 margin: "2px",
                 button { class: class!(underline),
-                    onclick: move |_| {
-                        if selected_folder_str() != folder_str {
-                            words_page_offset.set(None);
-                            *SELECTED_WORD_INDEX.write() = None;
-                        }
-                        selected_folder_str.set(folder_str.to_owned());
-                        navigation.send(Navigation::Words);
-                    },
                     "{folder_str}"
                 }
             }
@@ -64,7 +64,10 @@ pub(crate) fn ShowFolder(
             div { class: class!(flex_none),
                 margin: "2px",
                 button { class: class!(inline_block),
-                    onclick: move |_| folder_key.send(FolderKey{ id }),
+                    onclick: move |event| {
+                        event.stop_propagation();
+                        folder_key.send(FolderKey{ id });
+                    },
                     Icon {
                         height: 16,
                         width: 16,
