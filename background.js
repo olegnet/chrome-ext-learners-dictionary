@@ -1,24 +1,18 @@
 const SITE_ORIGIN = 'https://www.oxfordlearnersdictionaries.com';
 const SIDEPANEL = 'sidepanel.html';
 
-chrome.sidePanel.setPanelBehavior({openPanelOnActionClick: true})
-    .catch((error) => {
-        // console.error(error);
-    });
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.sidePanel.setPanelBehavior({openPanelOnActionClick: true});
+});
 
-chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+chrome.action.onClicked.addListener((tab) => {
     if (!tab.url) return;
-
     const url = new URL(tab.url);
-
     if (url.origin === SITE_ORIGIN) {
-        await chrome.sidePanel.setOptions({
-            tabId, path: SIDEPANEL, enabled: true
-        });
+        chrome.sidePanel.setOptions({tabId: tab.id, path: SIDEPANEL, enabled: true});
+        chrome.sidePanel.open({tabId: tab.id});
     } else {
-        await chrome.sidePanel.setOptions({
-            tabId, enabled: false
-        });
+        chrome.sidePanel.setOptions({tabId: tab.id, enabled: false});
     }
 });
 
