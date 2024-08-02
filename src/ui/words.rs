@@ -19,10 +19,9 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use log::debug;
-
 use crate::storage_global::get_storage;
 use crate::ui::add_word_form::AddWordForm;
-use crate::ui::MAX_WORD_INDEX;
+use crate::ui::{MAX_WORD_INDEX, next_word, previous_word};
 use crate::ui::error_message::ErrorMessage;
 use crate::ui::pager::{Pager, PagerMode};
 use crate::ui::search_form::SearchForm;
@@ -111,6 +110,11 @@ pub(crate) fn Words(
 
         div { class: class!(text_lg),
             margin_top: "5px",
+            tabindex: "-1",
+            onkeydown: move |event| {
+                event.stop_propagation();
+                key_event(event);
+            },
             div { class: class!(hidden),
                 "{refresh_words}"
             }
@@ -123,8 +127,19 @@ pub(crate) fn Words(
             }
             div { class: "main-content",
                 id: "words-list",
+                tabindex: "0",
                 {words_to_show}
             }
         }
+    }
+}
+
+fn key_event(event: Event<KeyboardData>) {
+    let code = event.code();
+    debug!("code: {}", code);
+    match code {
+        Code::ArrowDown => next_word(),
+        Code::ArrowUp => previous_word(),
+        _ => {},
     }
 }

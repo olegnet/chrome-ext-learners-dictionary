@@ -136,12 +136,14 @@ pub fn Navigation() -> Element {
 
     rsx! {
         div { class: class!(text_lg),
+            tabindex: "-1",
             position: "relative",
             margin_top: "5px",
             form { action: "",
+                tabindex: "-1",
                 onsubmit: move |event| event.stop_propagation(),
-
                 div { class: class!(flex flex_row items_baseline),
+                    tabindex: "-1",
                     label { title: "Folders",
                         button { class: class!(btn btn_sm flex_none),
                             onclick: move |_| navigation.send(Navigation::Folders),

@@ -16,10 +16,6 @@ chrome.action.onClicked.addListener((tab) => {
     }
 });
 
-chrome.commands.onCommand.addListener((command) => {
-    // console.log(`Command: ${command}`);
-});
-
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // for sendMessage in content-script.js
 });

@@ -96,32 +96,20 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
     }
 }
 
-#[wasm_bindgen]
-pub fn on_keyboard_command(command: String) {
-    // debug!("on_keyboard_command: {}", command);
+pub(crate) fn previous_word() {
+    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
+        Some(x) => *v = Some(x - 1),
+        None => *v = Some(0)
+    });
+    scroll_to(SELECTED_WORD_INDEX());
+}
 
-    match Runtime::current() {
-        None => debug!("Runtime::current() is None"),
-        Some(_) => ScopeId::ROOT.in_runtime(|| {
-            match command.as_str() {
-                "previous_item" => {
-                    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
-                        Some(x) => *v = Some(x - 1),
-                        None => *v = Some(0)
-                    });
-                    scroll_to(SELECTED_WORD_INDEX());
-                }
-                "next_item" => {
-                    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
-                        Some(x) => *v = Some(x + 1),
-                        None => *v = Some(0)
-                    });
-                    scroll_to(SELECTED_WORD_INDEX());
-                }
-                _ => debug!("on_keyboard_command: unknown command: {}", command)
-            }
-        })
-    }
+pub(crate) fn next_word() {
+    SELECTED_WORD_INDEX.with_mut(move |v| match *v {
+        Some(x) => *v = Some(x + 1),
+        None => *v = Some(0)
+    });
+    scroll_to(SELECTED_WORD_INDEX());
 }
 
 fn scroll_to(id: Option<i32>) {
