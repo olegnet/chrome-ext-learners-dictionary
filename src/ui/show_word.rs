@@ -53,11 +53,14 @@ pub(crate) fn ShowWord(
     rsx! {
         div { class: class!(flex flex_wrap items_baseline min_h_12 background_color selected_word),
             id: "word-{index}",
+            tabindex: "-1",
             margin: "1px",
             onclick: move |_| *SELECTED_WORD_INDEX.write() = Some(index),
             div { class: class!(flex_none),
+                tabindex: "-1",
                 margin_top: "1px",
                 button {
+                    tabindex: "0",
                     onclick: move |_| { spawn(dictionaryLookup(word_str.clone())); },
                     Icon {
                         height: 16,
@@ -67,22 +70,28 @@ pub(crate) fn ShowWord(
                 }
             }
             div { class: class!(flex_1),
+                tabindex: "-1",
                 margin: "2px",
                 button { class: class!(inline_block underline),
+                    tabindex: "0",
                     onclick: move |_| { spawn(openUrl(url.clone())); },
                     "{word_str}"
                 }
                 p { class: class!(text_xs),
+                    tabindex: "-1",
                     "{word_class}"
                 }
             }
             div { class: class!(flex_1),
+                tabindex: "-1",
                 margin: "2px",
                 "{note}"
             }
             div { class: class!(flex_none),
+                tabindex: "-1",
                 margin: "2px",
                 button { class: class!(inline_block),
+                    tabindex: "0",
                     onclick: move |event| {
                         event.stop_propagation();
                         word_key.send(WordKey{ id });
