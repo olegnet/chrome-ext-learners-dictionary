@@ -1,4 +1,12 @@
 
+div:focus {
+    outline: none;
+}
+
+p:focus {
+    outline: none;
+}
+
 .dioxus-main {
     position: absolute;
     top: 10px;
