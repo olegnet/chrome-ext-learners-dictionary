@@ -1,6 +1,6 @@
 [package]
 name = "dictionary"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Oleg Okhotnikov <dict.chext@gmail.com>"]
 edition = "2021"
 publish = false
