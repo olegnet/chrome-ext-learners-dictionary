@@ -136,7 +136,7 @@ pub(crate) fn Words(
 
 fn key_event(event: Event<KeyboardData>) {
     let code = event.code();
-    debug!("code: {}", code);
+    // debug!("code: {}", code);
     match code {
         Code::ArrowDown => next_word(),
         Code::ArrowUp => previous_word(),

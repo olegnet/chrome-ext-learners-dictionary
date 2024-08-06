@@ -20,15 +20,20 @@ use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fi_icons::{FiSearch, FiTrash};
-
+use dioxus_std::storage::{LocalStorage, use_synced_storage};
 use crate::model::{Word, WordKey};
-use crate::ui::{SELECTED_WORD_INDEX, dictionaryLookup, openUrl};
+use crate::ui::{SELECTED_WORD_INDEX, dictionaryLookup, openUrl, msg_use_arrow_keys_to_navigate};
+use crate::ui::navigation::{NAVIGATION_MESSAGE_NOTIFICATION, NavigationMessage};
 
 #[component]
 pub(crate) fn ShowWord(
     index: i32,
     word: ReadOnlySignal<Word>,
 ) -> Element {
+    let navigation_message = use_coroutine_handle::<NavigationMessage>();
+    let mut show_use_keyboard_message = use_synced_storage::<LocalStorage, bool>(
+        "show_use_keyboard_message".to_string(), || true);
+
     let word_key = use_coroutine_handle::<WordKey>();
 
     let selected_word_index = use_memo(move || SELECTED_WORD_INDEX());
@@ -55,7 +60,16 @@ pub(crate) fn ShowWord(
             id: "word-{index}",
             tabindex: "-1",
             margin: "1px",
-            onclick: move |_| *SELECTED_WORD_INDEX.write() = Some(index),
+            onclick: move |_| {
+                *SELECTED_WORD_INDEX.write() = Some(index);
+                if show_use_keyboard_message() {
+                    show_use_keyboard_message.set(false);
+                    navigation_message.send(NavigationMessage {
+                        message: msg_use_arrow_keys_to_navigate,
+                        color: NAVIGATION_MESSAGE_NOTIFICATION
+                    });
+                }
+            },
             div { class: class!(flex_none),
                 tabindex: "-1",
                 margin_top: "1px",

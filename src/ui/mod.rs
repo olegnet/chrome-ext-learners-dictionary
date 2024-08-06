@@ -52,6 +52,10 @@ const msg_folder_name_is_empty: &str = "Folder name is empty";
 const msg_word_is_empty: &str = "Word is empty";
 const msg_select_folder_first: &str = "Please select a folder first";
 const msg_data_successfully_imported: &str = "Data successfully imported";
+const msg_data_protection_is_set: &str = "Data protection is set. Check the settings to disable it";
+const msg_word_was_deleted: &str = "Word was deleted";
+const msg_folder_was_deleted: &str = "Folder was deleted";
+const msg_use_arrow_keys_to_navigate: &str = "Use the up and down arrow keys to navigate the list";
 
 const BASE_URL: &str = "https://www.oxfordlearnersdictionaries.com";
 
@@ -63,9 +67,7 @@ static CURRENT_TAB_DATA: GlobalSignal<CurrentTabData> = Signal::global(|| Curren
 static SELECTED_WORD_INDEX: GlobalSignal<Option<i32>> = Signal::global(|| None);
 static MAX_WORD_INDEX: GlobalSignal<i32> = Signal::global(|| 0);
 
-const AUTOPLAY_DEFAULT_TRUE: u8 = 255;
-const AUTOPLAY_FALSE: u8 = 0;
-static AUTOPLAY: GlobalSignal<u8> = Signal::global(|| AUTOPLAY_DEFAULT_TRUE);
+static AUTOPLAY: GlobalSignal<bool> = Signal::global(|| true);
 
 
 #[wasm_bindgen]
@@ -89,7 +91,7 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
             CURRENT_TAB_DATA.with_mut(move |v|
                 *v = CurrentTabData { url, word, word_class, phonetics }
             );
-            if AUTOPLAY() == AUTOPLAY_DEFAULT_TRUE {
+            if AUTOPLAY() {
                 spawn(playPhonetics());
             }
         })
@@ -136,8 +138,8 @@ extern "C" {
 
 #[component]
 pub fn App() -> Element {
-    let autoplay = use_synced_storage::<LocalStorage, u8>(
-        "autoplay".to_string(), || AUTOPLAY_DEFAULT_TRUE);
+    let autoplay = use_synced_storage::<LocalStorage, bool>(
+        "autoplay".to_string(), || true);
 
     use_effect(move || {
         AUTOPLAY.with_mut(move |v| *v = autoplay());

@@ -19,7 +19,7 @@
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_std::storage::{LocalStorage, use_synced_storage};
-use crate::ui::{AUTOPLAY, AUTOPLAY_DEFAULT_TRUE, AUTOPLAY_FALSE};
+use crate::ui::AUTOPLAY;
 use crate::ui::navigation::{DataProtection, Navigation};
 use crate::ui::page_length::PageLength;
 
@@ -38,13 +38,11 @@ pub(crate) fn Settings(
         DataProtection::Protected => "Uncheck to be able to delete folders and words",
     });
 
-    let mut autoplay = use_synced_storage::<LocalStorage, u8>(
-        "autoplay".to_string(), || AUTOPLAY_DEFAULT_TRUE);
+    let mut autoplay = use_synced_storage::<LocalStorage, bool>(
+        "autoplay".to_string(), || true);
 
-    let autoplay_memo = use_memo(move || match autoplay() {
-        255 => "Autoplay is enabled",
-        _ => "Autoplay is disabled",
-    });
+    let autoplay_memo = use_memo(
+        move || if autoplay() { "Autoplay is enabled" } else { "Autoplay is disabled" });
 
     rsx! {
         div { class: class!(text_base),
@@ -120,14 +118,9 @@ pub(crate) fn Settings(
                         onsubmit: move |event| event.stop_propagation(),
                         input {
                             r#type: "checkbox",
-                            checked: autoplay() == AUTOPLAY_DEFAULT_TRUE,
+                            checked: autoplay(),
                             onchange: move |event| {
-                                AUTOPLAY.with_mut(move |v| {
-                                    match event.checked() {
-                                        true => *v = AUTOPLAY_DEFAULT_TRUE,
-                                        false => *v = AUTOPLAY_FALSE
-                                    }
-                                });
+                                AUTOPLAY.with_mut(move |v| *v = event.checked());
                                 autoplay.set(AUTOPLAY());
                             },
                         }

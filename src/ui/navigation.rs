@@ -26,7 +26,7 @@ use futures_util::StreamExt;
 
 use crate::model::{default_sort_direction, Folder, FolderKey, Word, WordKey};
 use crate::storage_global::get_storage;
-use crate::ui::{CURRENT_TAB_DATA, msg_select_folder_first};
+use crate::ui::{CURRENT_TAB_DATA, msg_data_protection_is_set, msg_folder_was_deleted, msg_select_folder_first, msg_word_was_deleted};
 use crate::ui::export_data::ExportData;
 use crate::ui::folders::Folders;
 use crate::ui::import_data::ImportData;
@@ -49,14 +49,29 @@ pub(crate) enum DataProtection {
     Unprotected,
 }
 
+pub(crate) const NAVIGATION_MESSAGE_ERROR: &str = text_red_500;
+pub(crate) const NAVIGATION_MESSAGE_NOTIFICATION: &str = text_green_500;
+
+#[derive(Debug, Clone, PartialEq, Default)]
+pub(crate) struct NavigationMessage {
+    pub(crate) message: &'static str,
+    pub(crate) color: &'static str,
+}
+
 #[component]
 pub fn Navigation() -> Element {
     let mut navigation_state = use_signal(|| Navigation::Folders);
-    let mut navigation_error_str = use_signal(|| String::new());
+    let mut navigation_message = use_signal(|| NavigationMessage::default());
+    let _navigation_message_send = use_coroutine(|mut rx| async move {
+        while let Some(message) = rx.next().await {
+            navigation_message.set(message);
+        }
+    });
+
     let navigation = use_coroutine(|mut rx| async move {
         while let Some(state) = rx.next().await {
             navigation_state.set(state);
-            navigation_error_str.set(String::new());
+            navigation_message.set(NavigationMessage::default());
         }
     });
 
@@ -92,7 +107,10 @@ pub fn Navigation() -> Element {
 
     let data_protection = use_signal(|| DataProtection::Protected);
     let data_protection_error = move ||
-        navigation_error_str.set("Data protection is set. Check the settings to disable it".to_string());
+    navigation_message.set(NavigationMessage {
+        message: msg_data_protection_is_set,
+        color: NAVIGATION_MESSAGE_ERROR,
+    });
 
     let _delete_word = use_coroutine(|mut rx: UnboundedReceiver<WordKey>| {
         to_owned![refresh_words, data_protection_error];
@@ -103,7 +121,10 @@ pub fn Navigation() -> Element {
                     DataProtection::Unprotected => {
                         let _ = get_storage().delete_by_id::<Word>(word_key.id).await;
                         refresh_words.toggle();
-                        navigation_error_str.set("Word was deleted".to_string());
+                        navigation_message.set(NavigationMessage {
+                            message: msg_word_was_deleted,
+                            color: NAVIGATION_MESSAGE_ERROR,
+                        });
                     }
                 }
             }
@@ -119,7 +140,10 @@ pub fn Navigation() -> Element {
                     DataProtection::Unprotected => {
                         let _ = get_storage().delete_by_id::<Folder>(folder_key.id).await;
                         refresh_folders.toggle();
-                        navigation_error_str.set("Folder was deleted".to_string());
+                        navigation_message.set(NavigationMessage {
+                            message: msg_folder_was_deleted,
+                            color: NAVIGATION_MESSAGE_ERROR,
+                        });
                     }
                 }
             }
@@ -165,7 +189,10 @@ pub fn Navigation() -> Element {
                                 if selected_folder_str().len() != 0 {
                                     navigation.send(Navigation::Words);
                                 } else {
-                                    navigation_error_str.set(msg_select_folder_first.to_string());
+                                    navigation_message.set(NavigationMessage {
+                                        message: msg_select_folder_first,
+                                        color: NAVIGATION_MESSAGE_ERROR,
+                                    });
                                 }
                             },
                             Icon { icon: MdNotes }
@@ -187,8 +214,8 @@ pub fn Navigation() -> Element {
                     }
                 }
 
-                p { class: class!(text_xs text_red_500),
-                    "{navigation_error_str}"
+                p { class: class!(text_xs pt_2 navigation_message().color),
+                    {navigation_message().message}
                 }
             }
             match navigation_state() {
