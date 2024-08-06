@@ -67,9 +67,7 @@ static CURRENT_TAB_DATA: GlobalSignal<CurrentTabData> = Signal::global(|| Curren
 static SELECTED_WORD_INDEX: GlobalSignal<Option<i32>> = Signal::global(|| None);
 static MAX_WORD_INDEX: GlobalSignal<i32> = Signal::global(|| 0);
 
-const AUTOPLAY_DEFAULT_TRUE: u8 = 255;
-const AUTOPLAY_FALSE: u8 = 0;
-static AUTOPLAY: GlobalSignal<u8> = Signal::global(|| AUTOPLAY_DEFAULT_TRUE);
+static AUTOPLAY: GlobalSignal<bool> = Signal::global(|| true);
 
 
 #[wasm_bindgen]
@@ -93,7 +91,7 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
             CURRENT_TAB_DATA.with_mut(move |v|
                 *v = CurrentTabData { url, word, word_class, phonetics }
             );
-            if AUTOPLAY() == AUTOPLAY_DEFAULT_TRUE {
+            if AUTOPLAY() {
                 spawn(playPhonetics());
             }
         })
@@ -140,8 +138,8 @@ extern "C" {
 
 #[component]
 pub fn App() -> Element {
-    let autoplay = use_synced_storage::<LocalStorage, u8>(
-        "autoplay".to_string(), || AUTOPLAY_DEFAULT_TRUE);
+    let autoplay = use_synced_storage::<LocalStorage, bool>(
+        "autoplay".to_string(), || true);
 
     use_effect(move || {
         AUTOPLAY.with_mut(move |v| *v = autoplay());
