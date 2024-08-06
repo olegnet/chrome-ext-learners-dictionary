@@ -52,6 +52,10 @@ const msg_folder_name_is_empty: &str = "Folder name is empty";
 const msg_word_is_empty: &str = "Word is empty";
 const msg_select_folder_first: &str = "Please select a folder first";
 const msg_data_successfully_imported: &str = "Data successfully imported";
+const msg_data_protection_is_set: &str = "Data protection is set. Check the settings to disable it";
+const msg_word_was_deleted: &str = "Word was deleted";
+const msg_folder_was_deleted: &str = "Folder was deleted";
+const msg_use_arrow_keys_to_navigate: &str = "Use the up and down arrow keys to navigate the list";
 
 const BASE_URL: &str = "https://www.oxfordlearnersdictionaries.com";
 
