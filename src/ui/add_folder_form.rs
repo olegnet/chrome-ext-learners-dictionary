@@ -31,7 +31,7 @@ pub(crate) fn AddFolderForm(
     folder_error_str: Signal<String>,
     refresh_folders: Signal<u8>,
 ) -> Element {
-    let add_folder = use_coroutine(|mut rx| {
+    let add_folder = use_coroutine(move |mut rx| {
         to_owned![refresh_folders];
         async move {
             while let Some(folder) = rx.next().await {

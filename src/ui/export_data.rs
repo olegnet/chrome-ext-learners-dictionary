@@ -24,7 +24,7 @@ use web_sys::{console, File, FilePropertyBag, Url};
 
 use crate::storage_global::get_storage;
 use crate::ui::error_message::ErrorMessage;
-use crate::ui::navigation::Navigation;
+use crate::ui::navigation::NavigationState;
 use crate::ui::{startDownload, EXPORT_FILE_NAME, EXPORT_FILE_TYPE, js_value_to_string};
 
 #[component]
@@ -34,7 +34,7 @@ pub(crate) fn ExportData() -> Element {
     });
 
     match &*export_data.read_unchecked() {
-        None => None,   // TODO add some placeholder message
+        None => VNode::empty(),   // TODO add some placeholder message
         Some(Ok(data)) => {
             rsx! {
                 StartDownload {
@@ -55,13 +55,13 @@ pub(crate) fn ExportData() -> Element {
 
 #[component]
 pub(crate) fn StartDownload(data: String) -> Element {
-    let navigation = use_coroutine_handle::<Navigation>();
+    let navigation = use_coroutine_handle::<NavigationState>();
 
     let result = open_download_window(&data);
     match result {
         Ok(_) => {
-            navigation.send(Navigation::Settings);
-            None
+            navigation.send(NavigationState::Settings);
+            VNode::empty()
         }
         Err(err) => {
             console::warn_1(&err);
@@ -78,10 +78,13 @@ fn open_download_window(data: &str) -> Result<(), JsValue> {
     let js_value = JsValue::from_serde(&vec![data])
         .map_err(|err| err.to_string())?;   // FIXME to_string() ?
 
+    let file_type = FilePropertyBag::new();
+    file_type.set_type(EXPORT_FILE_TYPE);
+
     let file = File::new_with_str_sequence_and_options(
         &js_value,
-        EXPORT_FILE_NAME, // this name isn't used, look below
-        &FilePropertyBag::new().type_(EXPORT_FILE_TYPE),
+        EXPORT_FILE_NAME, // this name isn't used, look at file_type
+        &file_type,
     )?;
 
     let url = Url::create_object_url_with_blob(&file)?;

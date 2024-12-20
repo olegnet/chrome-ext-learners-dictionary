@@ -22,7 +22,7 @@ use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fi_icons::FiTrash;
 
 use crate::model::{Folder, FolderKey};
-use crate::ui::navigation::Navigation;
+use crate::ui::navigation::NavigationState;
 use crate::ui::SELECTED_WORD_INDEX;
 
 #[component]
@@ -32,7 +32,7 @@ pub(crate) fn ShowFolder(
     selected_folder_str: Signal<String>,
     words_page_offset: Signal<Option<u32>>,
 ) -> Element {
-    let navigation = use_coroutine_handle::<Navigation>();
+    let navigation = use_coroutine_handle::<NavigationState>();
     let folder_key = use_coroutine_handle::<FolderKey>();
 
     let id = folder().id.unwrap();
@@ -50,7 +50,7 @@ pub(crate) fn ShowFolder(
                     *SELECTED_WORD_INDEX.write() = None;
                 }
                 selected_folder_str.set(folder_str.to_owned());
-                navigation.send(Navigation::Words);
+                navigation.send(NavigationState::Words);
             },
             div { class: class!(flex_auto),
                 margin: "2px",

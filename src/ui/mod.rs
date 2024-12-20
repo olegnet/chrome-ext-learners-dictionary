@@ -18,7 +18,7 @@
 #![allow(non_upper_case_globals)]
 
 use dioxus::prelude::*;
-use dioxus_std::storage::{LocalStorage, use_synced_storage};
+use dioxus_sdk::storage::{LocalStorage, use_synced_storage};
 use log::debug;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsValue;
@@ -86,8 +86,8 @@ pub fn on_tab_loaded(url: String, word: String, word_class: String, title: Strin
     // debug!("tab is loaded: word={} class={} phonetics={} url={}", word, word_class, phonetics, url);
 
     match Runtime::current() {
-        None => debug!("Runtime::current() is None"),
-        Some(_) => ScopeId::ROOT.in_runtime(|| {
+        Err(err) => debug!("Runtime::current() is {}", &err),
+        Ok(_) => ScopeId::ROOT.in_runtime(|| {
             CURRENT_TAB_DATA.with_mut(move |v|
                 *v = CurrentTabData { url, word, word_class, phonetics }
             );

@@ -15,7 +15,8 @@
  */
 
 use cfg_if::cfg_if;
-use dioxus::prelude::launch_web;
+// use dioxus::logger::tracing::Level;
+use dioxus::prelude::*;
 use log::debug;
 use wasm_bindgen::prelude::*;
 
@@ -31,7 +32,7 @@ mod ui;
 cfg_if! {
     if #[cfg(feature = "console_log")] {
         fn init_log() {
-            console_log::init_with_level(log::Level::Trace).expect("Error initializing logger");
+            // console_log::init_with_level(log::Level::Trace).expect("Error initializing logger");
         }
     } else {
         fn init_log() {
@@ -51,7 +52,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     // log_storage_properties().await?;
 
-    launch_web(App);
+    launch(App);
 
     Ok(())
 }

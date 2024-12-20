@@ -35,7 +35,7 @@ pub(crate) fn AddWordForm(
     note_str: Signal<String>,
     refresh_words: Signal<u8>,
 ) -> Element {
-    let add_word = use_coroutine(|mut rx| {
+    let add_word = use_coroutine(move |mut rx| {
         to_owned![refresh_words];
         async move {
             while let Some(word) = rx.next().await {

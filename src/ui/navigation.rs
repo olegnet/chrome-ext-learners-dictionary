@@ -21,7 +21,7 @@ use dioxus_free_icons::icons::md_action_icons::MdSettings;
 use dioxus_free_icons::icons::md_editor_icons::MdNotes;
 use dioxus_free_icons::icons::md_file_icons::MdFolder;
 use dioxus_free_icons::icons::md_navigation_icons::{MdArrowDropDown, MdArrowDropUp};
-use dioxus_std::storage::{LocalStorage, use_synced_storage};
+use dioxus_sdk::storage::{LocalStorage, use_synced_storage};
 use futures_util::StreamExt;
 
 use crate::model::{default_sort_direction, Folder, FolderKey, Word, WordKey};
@@ -35,7 +35,7 @@ use crate::ui::show_copyright::ShowCopyright;
 use crate::ui::words::Words;
 
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) enum Navigation {
+pub(crate) enum NavigationState {
     Folders,
     Words,
     Settings,
@@ -60,15 +60,15 @@ pub(crate) struct NavigationMessage {
 
 #[component]
 pub fn Navigation() -> Element {
-    let mut navigation_state = use_signal(|| Navigation::Folders);
+    let mut navigation_state = use_signal(|| NavigationState::Folders);
     let mut navigation_message = use_signal(|| NavigationMessage::default());
-    let _navigation_message_send = use_coroutine(|mut rx| async move {
+    let _navigation_message_send = use_coroutine(move |mut rx| async move {
         while let Some(message) = rx.next().await {
             navigation_message.set(message);
         }
     });
 
-    let navigation = use_coroutine(|mut rx| async move {
+    let navigation = use_coroutine(move |mut rx| async move {
         while let Some(state) = rx.next().await {
             navigation_state.set(state);
             navigation_message.set(NavigationMessage::default());
@@ -112,7 +112,7 @@ pub fn Navigation() -> Element {
         color: NAVIGATION_MESSAGE_ERROR,
     });
 
-    let _delete_word = use_coroutine(|mut rx: UnboundedReceiver<WordKey>| {
+    let _delete_word = use_coroutine(move |mut rx: UnboundedReceiver<WordKey>| {
         to_owned![refresh_words, data_protection_error];
         async move {
             while let Some(word_key) = rx.next().await {
@@ -131,7 +131,7 @@ pub fn Navigation() -> Element {
         }
     });
 
-    let _delete_folder = use_coroutine(|mut rx: UnboundedReceiver<FolderKey>| {
+    let _delete_folder = use_coroutine(move |mut rx: UnboundedReceiver<FolderKey>| {
         to_owned![refresh_folders, data_protection_error];
         async move {
             while let Some(folder_key) = rx.next().await {
@@ -170,7 +170,7 @@ pub fn Navigation() -> Element {
                     tabindex: "-1",
                     label { title: "Folders",
                         button { class: class!(btn btn_sm flex_none),
-                            onclick: move |_| navigation.send(Navigation::Folders),
+                            onclick: move |_| navigation.send(NavigationState::Folders),
                             Icon { icon: MdFolder }
                             "Folders"
                         }
@@ -178,7 +178,7 @@ pub fn Navigation() -> Element {
                     ShowFormButton {
                         title: "Show add folder form",
                         navigation_state: navigation_state,
-                        form_state: Navigation::Folders,
+                        form_state: NavigationState::Folders,
                         show_form: show_add_folder_form,
                     }
                     label { title: "Words",
@@ -187,7 +187,7 @@ pub fn Navigation() -> Element {
                             margin_right: "1px",
                             onclick: move |_| {
                                 if selected_folder_str().len() != 0 {
-                                    navigation.send(Navigation::Words);
+                                    navigation.send(NavigationState::Words);
                                 } else {
                                     navigation_message.set(NavigationMessage {
                                         message: msg_select_folder_first,
@@ -202,13 +202,13 @@ pub fn Navigation() -> Element {
                     ShowFormButton {
                         title: "Show add word form",
                         navigation_state: navigation_state,
-                        form_state: Navigation::Words,
+                        form_state: NavigationState::Words,
                         show_form: show_add_word_form,
                     }
                     label { title: "Settings",
                         button { class: class!(btn btn_sm flex_none),
                             margin_left: "5px",
-                            onclick: move |_| navigation.send(Navigation::Settings),
+                            onclick: move |_| navigation.send(NavigationState::Settings),
                             Icon { icon: MdSettings }
                         }
                     }
@@ -219,7 +219,7 @@ pub fn Navigation() -> Element {
                 }
             }
             match navigation_state() {
-                Navigation::Folders => {
+                NavigationState::Folders => {
                     rsx! {
                         Folders {
                             folder_str: folder_str,
@@ -235,7 +235,7 @@ pub fn Navigation() -> Element {
                         }
                     }
                 }
-                Navigation::Words => {
+                NavigationState::Words => {
                     rsx! {
                         Words {
                             selected_folder_str: selected_folder_str,
@@ -252,7 +252,7 @@ pub fn Navigation() -> Element {
                         }
                     }
                 }
-                Navigation::Settings => {
+                NavigationState::Settings => {
                     rsx! {
                         Settings {
                             folders_page_length: folders_page_length,
@@ -263,19 +263,19 @@ pub fn Navigation() -> Element {
                         }
                     }
                 }
-                Navigation::ExportData => {
+                NavigationState::ExportData => {
                     rsx! {
                         ExportData {}
                     }
                 }
-                Navigation::ImportData => {
+                NavigationState::ImportData => {
                     rsx! {
                         ImportData {}
                     }
                 }
             }
         }
-        if navigation_state() == Navigation::Settings {
+        if navigation_state() == NavigationState::Settings {
             ShowCopyright {}
         }
     }
@@ -284,8 +284,8 @@ pub fn Navigation() -> Element {
 #[component]
 pub fn ShowFormButton(
     title: &'static str,
-    navigation_state: Signal<Navigation>,
-    form_state: Navigation,
+    navigation_state: Signal<NavigationState>,
+    form_state: NavigationState,
     show_form: Signal<u8>,
 ) -> Element {
     rsx! {

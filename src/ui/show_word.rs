@@ -20,7 +20,7 @@ use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
 use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fi_icons::{FiSearch, FiTrash};
-use dioxus_std::storage::{LocalStorage, use_synced_storage};
+use dioxus_sdk::storage::{LocalStorage, use_synced_storage};
 use crate::model::{Word, WordKey};
 use crate::ui::{SELECTED_WORD_INDEX, dictionaryLookup, openUrl, msg_use_arrow_keys_to_navigate};
 use crate::ui::navigation::{NAVIGATION_MESSAGE_NOTIFICATION, NavigationMessage};

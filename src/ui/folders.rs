@@ -51,7 +51,7 @@ pub(crate) fn Folders(
     let (folders_to_show, count) = match &*folders.read_unchecked() {
         None => {
             // debug!("None");
-            (None, 0u32)
+            (rsx! {}, 0u32)
         }
         Some(Err(err)) => {
             debug!("Err: {}", err);

@@ -18,9 +18,9 @@
 
 use dioxus::prelude::*;
 use dioxus_daisyui::prelude::*;
-use dioxus_std::storage::{LocalStorage, use_synced_storage};
+use dioxus_sdk::storage::{LocalStorage, use_synced_storage};
 use crate::ui::AUTOPLAY;
-use crate::ui::navigation::{DataProtection, Navigation};
+use crate::ui::navigation::{DataProtection, NavigationState};
 use crate::ui::page_length::PageLength;
 
 #[component]
@@ -31,7 +31,7 @@ pub(crate) fn Settings(
     words_offset: Signal<Option<u32>>,
     data_protection: Signal<DataProtection>,
 ) -> Element {
-    let navigation = use_coroutine_handle::<Navigation>();
+    let navigation = use_coroutine_handle::<NavigationState>();
 
     let data_protection_memo = use_memo(move || match data_protection() {
         DataProtection::Unprotected => "You can delete folders and words",
@@ -49,12 +49,12 @@ pub(crate) fn Settings(
             margin_top: "10px",
             div {
                 button { class: class!(btn btn_sm),
-                    onclick: move |_| navigation.send(Navigation::ExportData),
+                    onclick: move |_| navigation.send(NavigationState::ExportData),
                     "Export"
                 }
                 button { class: class!(btn btn_sm),
                     margin_left: "5px",
-                    onclick: move |_| navigation.send(Navigation::ImportData),
+                    onclick: move |_| navigation.send(NavigationState::ImportData),
                     "Import"
                 }
             }

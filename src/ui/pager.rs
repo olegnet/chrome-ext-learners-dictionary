@@ -95,7 +95,7 @@ pub(crate) fn Pager(
                 }
             }
         }
-        None => None,
+        None => VNode::empty(),
     };
 
     rsx! {
