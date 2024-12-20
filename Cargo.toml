@@ -15,7 +15,7 @@ crate-type = ["cdylib", "rlib"]
 dioxus = { version = "0.6.1", features = ["web"] }
 dioxus-sdk = { version = "0.6.0", features = ["storage"] }
 
-dioxus-tailwindcss = "0.8.0"
+#dioxus-tailwindcss = "0.8.0"
 dioxus-daisyui = "0.8.0"
 
 # https://react-icons.github.io/react-icons/
@@ -31,8 +31,7 @@ wasm-bindgen = "0.2.99"
 wasm-bindgen-futures = "0.4.49"
 gloo-utils = { version = "0.2.0", features = ["serde"] }
 
-chrono = "0.4.38"
-num-traits = { version = "0.2.19", default-features = false }
+chrono = "0.4.39"
 rexie = "0.5.0"
 serde = { version = "1.0.204", features = ["derive"] }
 serde-wasm-bindgen = "0.6.5"
@@ -40,6 +39,9 @@ serde_json = "1.0.133"
 thiserror = "1.0.63"
 futures-util = "0.3.30"
 lazy_static = "1.5.0"
+
+# added because of Dependabot warning
+idna = "1.0.3"
 
 # https://docs.rs/console_log/1.0.0/console_log/
 cfg-if = "1.0.0"
