@@ -26,7 +26,7 @@ pub fn ShowCopyright() -> Element {
             position: "absolute",
             bottom: "0",
             margin_bottom: "15px",
-            p { "Copyright (c) 2024 Oleg Okhotnikov" }
+            p { "Copyright (c) 2024-2025 Oleg Okhotnikov" }
             a { class: class!(text_xs link link_primary),
                 href: "https://github.com/olegnet/chrome-ext-learners-dictionary",
                 target: "_blank",
